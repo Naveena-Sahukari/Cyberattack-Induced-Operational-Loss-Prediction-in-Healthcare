@@ -134,8 +134,6 @@ Cyber-Operational-Loss-Prediction/
 │   ├── graphs/
 │   └── reports/
 ├── README.md
-├── requirements.txt
-└── .gitignore
 
 ⭐ Key Results & Insights:
 
