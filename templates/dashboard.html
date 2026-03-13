@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="logo">CyberMed Insight</div>
+
+<div class="nav">
+<a href="/simulator/">Simulator</a>
+<a href="/dashboard/">Dashboard</a>
+<a href="/analytics/">Analytics</a>
+<a href="/reports/">Reports</a>
+</div>
+
+</div>
+
+<div class="hero">
+
+<h1>Cyber Risk <span>Dashboard</span></h1>
+
+<p>Overview of cyber attack simulation results</p>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Total Simulations</h3>
+
+<h1>{{total}}</h1>
+
+</div>
+
+<div class="card">
+
+<h3>Average Predicted Loss</h3>
+
+<h1>${{avg_loss}}</h1>
+
+</div>
+
+<div class="card">
+
+<h3>Highest Predicted Loss</h3>
+
+<h1>${{highest}}</h1>
+
+</div>
+
+</div>
+
+</body>
+</html>

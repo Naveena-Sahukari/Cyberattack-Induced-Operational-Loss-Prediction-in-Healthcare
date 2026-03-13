@@ -1,0 +1,105 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",Arial;
+}
+
+body{
+background:#f5f7fb;
+color:#222;
+}
+
+/* HEADER */
+
+.header{
+height:70px;
+background:white;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 40px;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#1e40af;
+}
+
+.nav a{
+margin-right:25px;
+text-decoration:none;
+color:#333;
+font-weight:500;
+}
+
+.nav a:hover{
+color:#1e40af;
+}
+
+/* HERO */
+
+.hero{
+padding:50px 80px 20px 80px;
+}
+
+.hero h1{
+font-size:40px;
+}
+
+.hero span{
+color:#2aa7b8;
+}
+
+.hero p{
+margin-top:10px;
+color:#666;
+}
+
+/* MAIN */
+
+.container{
+padding:40px 80px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:25px;
+}
+
+/* CARDS */
+
+.card{
+background:white;
+padding:30px;
+border-radius:14px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* BUTTON */
+
+.btn{
+background:linear-gradient(90deg,#1e40af,#2aa7b8);
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:left;
+}
+
+th{
+background:#eef2ff;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Prediction Result</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f7fb;
+text-align:center;
+}
+
+.container{
+width:900px;
+margin:auto;
+background:white;
+padding:30px;
+margin-top:40px;
+border-radius:10px;
+}
+
+img{
+margin:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+    <div class="header">
+
+<div class="logo">
+CyberMed Insight
+</div>
+
+<div class="nav">
+
+<a href="/simulator/">Simulator</a>
+<a href="/dashboard/">Dashboard</a>
+<a href="/analytics/">Analytics</a>
+<a href="/reports/">Reports</a>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<h1>Cyber Impact Assessment</h1>
+
+<h2>Predicted Operational Loss</h2>
+
+<h1 style="color:red">$ {{ prediction }}</h1>
+
+<h3>SHAP Explainability</h3>
+
+<img src="{{ shap_plot }}" width="700">
+
+<h3>Impact Analysis</h3>
+
+<img src="{{ impact_graph }}" width="600">
+
+</div>
+
+</body>
+</html>

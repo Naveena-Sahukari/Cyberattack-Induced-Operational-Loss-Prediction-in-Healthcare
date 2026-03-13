@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Reports</title>
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="logo">CyberMed Insight</div>
+
+<div class="nav">
+<a href="/simulator/">Simulator</a>
+<a href="/dashboard/">Dashboard</a>
+<a href="/analytics/">Analytics</a>
+<a href="/reports/">Reports</a>
+</div>
+
+</div>
+
+<div class="hero">
+
+<h1>Incident <span>Reports</span></h1>
+
+<p>History of simulated cyber incidents</p>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<table>
+
+<tr>
+
+<th>Attack Type</th>
+<th>System</th>
+<th>Downtime</th>
+<th>Predicted Loss</th>
+
+</tr>
+
+{% for r in reports %}
+
+<tr>
+
+<td>{{r.attack_type}}</td>
+<td>{{r.system}}</td>
+<td>{{r.downtime}}</td>
+<td>${{r.predicted_loss}}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

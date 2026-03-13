@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Cyber Impact Simulator</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",Arial;
+}
+
+body{
+background:#f5f7fb;
+color:#222;
+}
+
+/* HEADER */
+
+.header{
+height:70px;
+background:white;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 40px;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.logo{
+font-size:20px;
+font-weight:bold;
+color:#1b4ed8;
+}
+
+.nav a{
+margin-right:20px;
+text-decoration:none;
+color:#333;
+font-weight:500;
+}
+
+.nav a:hover{
+color:#1e40af;
+}
+
+/* HERO */
+
+.hero{
+padding:50px 80px 20px 80px;
+}
+
+.hero h1{
+font-size:38px;
+}
+
+.hero span{
+color:#2aa7b8;
+}
+
+.hero p{
+color:#666;
+margin-top:10px;
+}
+
+/* MAIN LAYOUT */
+
+.container{
+display:flex;
+gap:40px;
+padding:40px 80px;
+}
+
+/* CARD */
+
+.card{
+background:white;
+padding:30px;
+border-radius:16px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+flex:1;
+}
+
+/* FORM */
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin-top:20px;
+}
+
+label{
+font-size:13px;
+color:#444;
+}
+
+input,select{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #ddd;
+margin-top:5px;
+}
+
+/* BUTTON */
+
+button{
+margin-top:20px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#1e40af,#2aa7b8);
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+/* RESULT PANEL */
+
+.result-box{
+text-align:center;
+}
+
+.result-box h1{
+font-size:42px;
+margin-top:10px;
+color:#1e40af;
+}
+
+.risk{
+margin-top:10px;
+font-weight:bold;
+}
+
+.explain{
+margin-top:20px;
+text-align:left;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="logo">CyberMed Insight</div>
+
+<div class="nav">
+<a href="/simulator/">Simulator</a>
+<a href="/dashboard/">Dashboard</a>
+<a href="/analytics/">Analytics</a>
+<a href="/reports/">Reports</a>
+</div>
+
+</div>
+
+
+<!-- HERO -->
+
+<div class="hero">
+
+<h1>Cyber Impact <span>Simulator</span></h1>
+
+<p>Simulate cyber attack scenarios and estimate operational loss</p>
+
+</div>
+
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+<!-- LEFT PANEL (FORM) -->
+
+<div class="card">
+
+<h3>Scenario Parameters</h3>
+
+<form id="impactForm">
+
+{% csrf_token %}
+
+<div class="form-grid">
+
+<div>
+<label>Attack Type</label>
+<select name="attack">
+<option>Ransomware</option>
+<option>Phishing</option>
+<option>DDoS</option>
+<option>Malware</option>
+</select>
+</div>
+
+<div>
+<label>Attack Vector</label>
+<select name="vector">
+<option>Email</option>
+<option>Network</option>
+<option>USB</option>
+</select>
+</div>
+
+<div>
+<label>System Affected</label>
+<select name="system">
+<option>EHR</option>
+<option>Billing</option>
+<option>PACS</option>
+</select>
+</div>
+
+<div>
+<label>Security Level</label>
+<select name="security">
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+</div>
+
+<div>
+<label>Downtime Hours</label>
+<input type="number" name="downtime" value="12">
+</div>
+
+<div>
+<label>Detection Delay</label>
+<input type="number" name="delay" value="20">
+</div>
+
+</div>
+
+<label style="margin-top:10px;">Records Compromised</label>
+<input type="number" name="records" value="1000">
+
+<button type="submit">⚡ Assess Impact</button>
+
+</form>
+
+</div>
+
+
+<!-- RIGHT PANEL (RESULT) -->
+
+<div class="card">
+
+<div class="result-box">
+
+<p>Predicted Operational Loss</p>
+
+<h1 id="predictedLoss">$0</h1>
+
+<div class="risk" id="riskLevel">
+Waiting for analysis
+</div>
+
+<div class="explain">
+
+<h4>AI Explainability</h4>
+
+<p>Downtime Impact: <span id="downtimeImpact">0</span></p>
+
+<p>Records Impact: <span id="recordsImpact">0</span></p>
+
+<p>Detection Delay Impact: <span id="delayImpact">0</span></p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+document.getElementById("impactForm").addEventListener("submit", function(e){
+
+e.preventDefault()
+
+let formData = new FormData(this)
+
+fetch("/predict/",{
+method:"POST",
+body:formData
+})
+.then(res => res.json())
+.then(data => {
+
+document.getElementById("predictedLoss").innerText =
+"$" + data.prediction
+
+document.getElementById("riskLevel").innerText =
+data.risk
+
+document.getElementById("downtimeImpact").innerText =
+data.shap["Downtime"]
+
+document.getElementById("recordsImpact").innerText =
+data.shap["Records"]
+
+document.getElementById("delayImpact").innerText =
+data.shap["Detection Delay"]
+
+})
+
+})
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>CyberMed Insight</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",Arial;
+}
+
+body{
+background:#f5f7fb;
+color:#222;
+}
+
+/* HEADER */
+
+.header{
+height:70px;
+background:white;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 40px;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.logo{
+font-size:20px;
+font-weight:bold;
+color:#1b4ed8;
+}
+
+.user{
+font-size:14px;
+color:#555;
+}
+
+/* HERO */
+
+.hero{
+padding:60px 80px 20px 80px;
+}
+
+.tag{
+display:inline-block;
+background:#eef2ff;
+padding:8px 14px;
+border-radius:20px;
+font-size:13px;
+color:#3b5bdb;
+margin-bottom:20px;
+}
+
+.hero h1{
+font-size:42px;
+margin-bottom:10px;
+}
+
+.hero h1 span{
+color:#2a9fd6;
+}
+
+.hero p{
+color:#666;
+}
+
+/* MAIN LAYOUT */
+
+.container{
+display:flex;
+gap:40px;
+padding:40px 80px;
+}
+
+/* CARD */
+
+.card{
+background:white;
+padding:30px;
+border-radius:16px;
+box-shadow:0 8px 25px rgba(0,0,0,0.1);
+flex:1;
+}
+
+/* FORM */
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin-top:20px;
+}
+
+label{
+font-size:13px;
+color:#444;
+}
+
+input,select{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #ddd;
+margin-top:5px;
+}
+
+/* BUTTON */
+
+button{
+margin-top:20px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#1e40af,#2aa7b8);
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+/* RESULT PANEL */
+
+.result-box{
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+color:#777;
+}
+
+.icon{
+font-size:50px;
+margin-bottom:20px;
+}
+.nav a{
+margin-right:20px;
+text-decoration:none;
+color:#333;
+font-weight:500;
+}
+
+.nav a:hover{
+color:#1e40af;
+}
+
+</style>
+
+</head>
+
+<body>
+<div class="header">
+
+<div class="logo">
+CyberMed Insight
+</div>
+
+<div class="nav">
+
+<a href="/home/">Simulator</a>
+
+<a href="/dashboard/">Dashboard</a>
+
+<a href="/analytics/">Analytics</a>
+
+<a href="/reports/">Reports</a>
+
+</div>
+
+<div class="user">
+Active Session
+</div>
+
+</div>
+<!-- HEADER -->
+
+
+</div>
+
+
+<!-- HERO -->
+
+<div class="hero">
+
+<div class="tag">
+Impact Assessment Platform
+</div>
+
+<h1>Cyber Impact <span>Intelligence</span></h1>
+
+<p>
+Analyze attack scenarios and receive actionable response guidance
+for your healthcare organization
+</p>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="container">
+
+<!-- SCENARIO FORM -->
+
+<div class="card">
+
+<h3>Scenario Parameters</h3>
+<p style="color:#777;font-size:13px;">
+Define the attack scenario for impact assessment
+</p>
+
+<form id="impactForm">
+
+{% csrf_token %}
+
+<div class="form-grid">
+
+<div>
+<label>Attack Type</label>
+<select name="attack">
+<option>Ransomware</option>
+<option>Phishing</option>
+<option>DDoS</option>
+<option>Malware</option>
+</select>
+</div>
+
+<div>
+<label>Attack Vector</label>
+<select name="vector">
+<option>Email</option>
+<option>Network</option>
+<option>USB</option>
+</select>
+</div>
+
+<div>
+<label>System Affected</label>
+<select name="system">
+<option>EHR</option>
+<option>Billing</option>
+<option>PACS</option>
+</select>
+</div>
+
+<div>
+<label>Security Level</label>
+<select name="security">
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+</div>
+
+<div>
+<label>Downtime Duration</label>
+<input type="number" name="downtime" value="24">
+</div>
+
+<div>
+<label>Detection Delay</label>
+<input type="number" name="delay" value="2">
+</div>
+
+</div>
+
+<label style="margin-top:10px;">Records Compromised</label>
+<input type="number" name="records" value="1000">
+
+<button type="submit">
+⚡ Assess Impact
+</button>
+
+</form>
+
+</div>
+
+
+<!-- RESULT PANEL -->
+
+<div class="card">
+
+<h3>Impact Assessment</h3>
+
+<div style="margin-top:20px">
+
+<p style="color:#777">Predicted Operational Loss</p>
+
+<h1 id="predictedLoss">$0</h1>
+
+</div>
+
+<div style="margin-top:20px">
+
+<p>Impact Severity</p>
+
+<h3 id="riskLevel">Waiting for analysis</h3>
+
+</div>
+
+<div style="margin-top:30px">
+
+<h4>AI Explainability</h4>
+
+<p>Downtime Impact: <span id="downtimeImpact">0</span></p>
+
+<p>Records Impact: <span id="recordsImpact">0</span></p>
+
+<p>Detection Delay Impact: <span id="delayImpact">0</span></p>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<script>
+
+document.getElementById("impactForm").addEventListener("submit", function(e){
+
+e.preventDefault()
+
+let formData = new FormData(this)
+
+fetch("/predict/",{
+method:"POST",
+body:formData
+})
+.then(res => res.json())
+.then(data => {
+
+document.getElementById("predictedLoss").innerText =
+"$" + data.prediction
+
+document.getElementById("riskLevel").innerText =
+data.risk
+
+document.getElementById("downtimeImpact").innerText =
+data.shap["Downtime"]
+
+document.getElementById("recordsImpact").innerText =
+data.shap["Records"]
+
+document.getElementById("delayImpact").innerText =
+data.shap["Detection Delay"]
+
+})
+
+})
+
+</script>
+</body>
+</html>

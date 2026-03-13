@@ -1,118 +1,84 @@
-🌟Cyberattack-Induced Operational Loss Prediction in Healthcare
+\# Cyberattack-Induced Operational Loss Prediction in Healthcare
 
-⭐ About the Project:
 
-Cyberattacks in healthcare do not just affect IT systems — they disrupt patient care, delay treatments, and increase operational costs.
-Even short periods of downtime can have serious consequences in hospitals.
 
-This project focuses on predicting and explaining the operational loss caused by cyber incidents in healthcare, with the goal of helping organizations make better and faster operational decisions instead of reacting blindly after damage occurs.
+\## Overview
 
-The project is designed as a decision-support system, not just a machine learning experiment.
 
-⭐ Problem Statement:
 
-Most cybersecurity solutions answer the question:
+Cyberattacks in healthcare can severely disrupt hospital operations.
 
-“Did an attack happen?”
+When critical systems such as Electronic Health Records (EHR), billing systems, or patient management platforms are affected, hospitals may experience downtime, delayed treatments, financial losses, and compromised patient data.
 
-However, healthcare administrators and operations teams need answers to more practical questions:
 
-How severe will the operational impact be?
 
-What factors are driving the loss?
+Most cybersecurity systems focus only on \*\*detecting attacks\*\*, but hospital administrators need answers to more operational questions such as:
 
-What action should be taken immediately?
 
-This project addresses that gap by estimating operational loss from cyberattack scenarios and converting predictions into actionable guidance.
 
-⭐ What This Project Does
+\* How severe will the operational impact be?
 
-Predicts operational loss caused by healthcare cyberattacks
+\* What factors are driving the loss?
 
-Identifies key loss drivers such as downtime and detection delay
+\* What actions should be taken immediately?
 
-Explains predictions using Explainable AI (SHAP)
 
-Maps predictions to clear operational actions
 
-In simple terms, it turns cyberattack data into business and operational insight.
+This project addresses that gap by developing a \*\*Cyberattack Impact Intelligence System\*\* that predicts operational loss from cyberattack scenarios and explains the prediction using \*\*Explainable AI techniques\*\*.
 
-⭐ Dataset
 
-Due to privacy and security constraints, real healthcare cyber incident data is not publicly available.
-To handle this, the project uses a synthetic dataset created using realistic ranges and relationships inspired by public healthcare cybersecurity and breach reports.
 
-Each row in the dataset represents a possible cyberattack scenario with features such as:
+The system integrates \*\*Machine Learning, Explainable AI, and a Django web application\*\* to transform cyberattack data into \*\*actionable operational insights\*\*.
 
-Attack type and attack vector
 
-System affected (EHR, billing, etc.)
 
-Downtime duration
 
-Number of records compromised
 
-Detection delay
 
-Security maturity level
 
-This approach preserves privacy while still allowing meaningful analysis.
+\# Problem Statement
 
-⭐ Approach & Methodology
 
-Data Preparation
 
-Encoded categorical features
+Healthcare organizations face increasing cyber threats, including ransomware attacks, malware infections, and data breaches.
 
-Scaled numerical variables
 
-Exploratory Data Analysis
 
-Identified operational loss drivers such as downtime and detection delay
+While many cybersecurity tools detect attacks, they do not answer critical operational questions such as:
 
-Modeling
 
-Trained a Random Forest regression model
 
-Evaluation
+\* What will be the financial and operational loss?
 
-Used MAE, RMSE, and R² metrics
+\* Which factors are contributing most to the impact?
 
-Explainability
+\* How should hospital administrators respond?
 
-Applied SHAP to understand global and individual predictions
 
-Decision Mapping
 
-Converted predicted loss into severity levels and recommended actions
+This project builds a \*\*decision-support system\*\* that estimates operational loss and provides interpretability and guidance for healthcare administrators.
 
-⭐ Why Random Forest?
 
-Random Forest was selected because it provides a strong balance between performance, robustness, and interpretability, which is especially important in healthcare applications.
 
-It:
 
-Captures non-linear relationships in operational loss data
 
-Is robust to noise and outliers
 
-Works well with mixed feature types
 
-Is easier to justify than deep learning models in sensitive domains
+\# Key Features
 
-Linear models tend to underfit this problem, while deep learning models require larger real-world datasets and offer limited transparency.
 
-⭐ Decision Framework
 
-Predictions are translated into operational actions using a simple framework:
+\* Predicts operational loss caused by healthcare cyberattacks
 
-Predicted Loss	Recommended Action
-Low	Routine monitoring
-Medium	Resource optimization
-High	Immediate intervention and system isolation
+\* Identifies key loss drivers such as downtime and detection delay
 
-This ensures model outputs can be directly used for decision-making.
+\* Explains predictions using SHAP (Explainable AI)
 
+\* Generates visual analysis graphs
+
+\* Provides operational risk recommendations
+
+<<<<<<< HEAD
 ⭐ Project Structure
 Cyber-Operational-Loss-Prediction/
 ├── data/
@@ -135,55 +101,432 @@ Cyber-Operational-Loss-Prediction/
 │   └── reports/
 ├── README.md
 
-⭐ Key Results & Insights:
+\* Web-based dashboard built using Django
+ 76df968 (Added CyberMed Impact Intelligence Platform project)
 
-Downtime duration and detection delay are the strongest contributors to operational loss
+\* Real-time prediction from user inputs
 
-Underestimating high-loss incidents is riskier than conservative overestimation
 
-Explainability results align well with healthcare domain expectations
 
-⭐ Limitations
+---
 
-Dataset is synthetic and based on assumptions from public reports
 
-Decision guidance is rule-based
 
-Real-time system integration is not included
+\# System Architecture
 
-These limitations are acceptable for an academic and early industry prototype.
 
-⭐ Future Improvements
 
-Integration with real-time cybersecurity monitoring systems
+The system follows a full machine learning deployment pipeline:
 
-Cost-sensitive threshold tuning
 
-Explainable dashboards for hospital administrators
 
-Time-series forecasting of hospital operational costs
 
-Cloud-based deployment for multi-hospital use
 
-⭐ Tech Stack
+Login Page
 
-Python
+&nbsp;    ↓
 
-Pandas, NumPy
+User enters cyber attack scenario
 
-Scikit-learn
+&nbsp;    ↓
 
-SHAP
+Django Backend receives data
 
-Matplotlib
+&nbsp;    ↓
 
-⭐ Disclaimer
+Random Forest Model predicts operational loss
 
-This project uses synthetic data created for academic and learning purposes to respect healthcare data privacy.
-It is intended as a decision-support prototype, not a production healthcare system.
+&nbsp;    ↓
 
-⭐ Author
+SHAP Explainability identifies key factors
+
+&nbsp;    ↓
+
+Graphs generated dynamically
+
+&nbsp;    ↓
+
+Result Dashboard displays prediction + analysis + recommendations
+
+```
+
+
+
+---
+
+
+
+\# Dataset
+
+
+
+Due to privacy restrictions, real healthcare cyberattack datasets are not publicly available.
+
+
+
+Therefore, this project uses a \*\*synthetic dataset\*\* created using realistic ranges and relationships based on public cybersecurity reports and healthcare breach statistics.
+
+
+
+Each scenario includes features such as:
+
+
+
+\* Attack Type (Ransomware, Malware, etc.)
+
+\* Attack Vector (Email, Network)
+
+\* System Affected (EHR, Database)
+
+\* Security Maturity Level
+
+\* Downtime Duration
+
+\* Detection Delay
+
+\* Records Compromised
+
+
+
+This allows meaningful analysis while maintaining privacy.
+
+
+
+---
+
+
+
+\# Machine Learning Model
+
+
+
+The project uses a \*\*Random Forest Regressor\*\* to estimate operational loss.
+
+
+
+\### Why Random Forest?
+
+
+
+\* Captures non-linear relationships
+
+\* Robust to noise and outliers
+
+\* Handles mixed feature types
+
+\* Provides stable performance
+
+\* Easier to explain than deep learning models
+
+
+
+---
+
+
+
+\# Explainable AI
+
+
+
+To improve transparency and trust in predictions, the system uses \*\*SHAP (SHapley Additive Explanations)\*\*.
+
+
+
+SHAP explains:
+
+
+
+\* Which features increased predicted loss
+
+\* Which features reduced predicted loss
+
+\* How each factor contributes to the final prediction
+
+
+
+This helps healthcare administrators understand \*\*why the model produced a particular result\*\*.
+
+
+
+---
+
+
+
+\# Visualization and Analysis
+
+
+
+The system generates visual insights including:
+
+
+
+\* SHAP Explanation Plot
+
+\* Impact Graph of attack factors
+
+\* Downtime and detection delay influence
+
+\* Records compromised impact
+
+
+
+These graphs are generated dynamically during prediction.
+
+
+
+---
+
+
+
+\# Decision Support Framework
+
+
+
+Predicted operational loss is translated into actionable guidance.
+
+
+
+| Predicted Loss | Recommended Action                          |
+
+| -------------- | ------------------------------------------- |
+
+| Low            | Routine monitoring                          |
+
+| Medium         | Resource optimization and monitoring        |
+
+| High           | Immediate intervention and system isolation |
+
+
+
+This allows hospital administrators to respond quickly during cyber incidents.
+
+
+
+---
+
+
+
+\# Technology Stack
+
+
+
+Backend
+
+
+
+\* Python
+
+\* Django
+
+\* NumPy
+
+\* Scikit-learn
+
+
+
+Machine Learning
+
+
+
+\* Random Forest Regression
+
+\* SHAP Explainable AI
+
+
+
+Visualization
+
+
+
+\* Matplotlib
+
+
+
+Frontend
+
+
+
+\* HTML
+
+\* CSS
+
+
+
+---
+
+
+
+\# Project Structure
+
+
+
+```
+
+Cyber\_Operational\_Loss\_Prediction
+
+
+
+├── cyberloss\_project
+
+│   ├── settings.py
+
+│   ├── urls.py
+
+│
+
+├── predictor
+
+│   ├── views.py
+
+│   ├── urls.py
+
+│
+
+├── templates
+
+│   ├── login.html
+
+│   ├── home.html
+
+│   ├── output.html
+
+│
+
+├── models
+
+│   └── loss\_prediction\_model.pkl
+
+│
+
+├── static
+
+│   ├── shap
+
+│   └── graphs
+
+│
+
+├── scripts
+
+│   ├── create\_dataset.py
+
+│   ├── preprocess\_data.py
+
+│   ├── train\_model.py
+
+│   ├── shap\_explainability.py
+
+│
+
+├── outputs
+
+│
+
+├── manage.py
+
+└── README.md
+
+```
+
+
+
+---
+
+
+
+\# Key Insights
+
+
+
+Analysis of the dataset reveals:
+
+
+
+\* Downtime duration is the strongest driver of operational loss
+
+\* Detection delay significantly increases financial impact
+
+\* Security maturity level reduces overall risk
+
+\* Large-scale data breaches increase recovery costs
+
+
+
+These insights align with real-world cybersecurity reports in healthcare.
+
+
+
+---
+
+
+
+\# Limitations
+
+
+
+\* Dataset is synthetic and based on assumed relationships
+
+\* Decision recommendations are rule-based
+
+\* Real-time cyber monitoring integration is not included
+
+
+
+These limitations are acceptable for an academic prototype.
+
+
+
+---
+
+
+
+\# Future Improvements
+
+
+
+\* Integration with real-time cybersecurity monitoring tools
+
+\* Deployment on cloud infrastructure
+
+\* Interactive dashboards for hospital administrators
+
+\* Time-series prediction of operational costs
+
+\* Integration with hospital incident response systems
+
+
+
+---
+
+
+
+\# Author
+
+
 
 Naveena Sahukari
+
 Machine Learning | Healthcare Analytics
-GitHub: https://github.com/Naveena-Sahukari
+
+
+
+GitHub
+
+https://github.com/Naveena-Sahukari
+
+
+
+---
+
+
+
+\# Disclaimer
+
+
+
+This project uses synthetic data created for academic and educational purposes.
+
+It is intended as a prototype decision-support system and not a production healthcare system.
+
+
+
