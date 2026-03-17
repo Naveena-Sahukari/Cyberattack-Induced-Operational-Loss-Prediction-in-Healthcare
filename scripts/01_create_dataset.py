@@ -1,38 +1,78 @@
 import pandas as pd
 import random
 
-# -----------------------------
-# 1. Define possible values
-# -----------------------------
+# ----------- possible values -----------
+
 attack_types = ["Ransomware", "Phishing", "DDoS", "Malware"]
 attack_vectors = ["Email", "Network", "USB"]
 systems_affected = ["EHR", "Billing", "PACS"]
 security_levels = ["Low", "Medium", "High"]
 
-# -----------------------------
-# 2. Cost assumptions (document this)
-# -----------------------------
-COST_PER_HOUR_DOWNTIME = 200000      # ₹ per hour
-COST_PER_RECORD = 500               # ₹ per record
+# ----------- cost assumptions -----------
 
-# -----------------------------
-# 3. Generate synthetic data
-# -----------------------------
+COST_PER_HOUR_DOWNTIME = 200000
+COST_PER_RECORD = 500
+COST_PER_DELAY = 5000   # NEW: detection delay impact
+
+# ----------- weights -----------
+
+attack_weight = {
+    "Ransomware": 1.8,
+    "Phishing": 1.2,
+    "DDoS": 1.4,
+    "Malware": 1.3
+}
+
+system_weight = {
+    "EHR": 2.0,
+    "Billing": 1.5,
+    "PACS": 1.7
+}
+
+security_weight = {
+    "Low": 1.6,
+    "Medium": 1.2,
+    "High": 0.7
+}
+
+# ----------- dataset -----------
+
 data = []
 
-for _ in range(100):  # generate 100 incidents
+for _ in range(3000):   # increased data size
+
     attack_type = random.choice(attack_types)
     attack_vector = random.choice(attack_vectors)
     system = random.choice(systems_affected)
-    
-    downtime = random.randint(1, 12)                  # hours
-    records = random.randint(0, 30000)                 # records
-    detection_delay = random.randint(10, 120)          # minutes
     security = random.choice(security_levels)
 
-    # Operational loss calculation
-    operational_loss = (downtime * COST_PER_HOUR_DOWNTIME) + \
-                       (records * COST_PER_RECORD)
+    downtime = random.randint(1, 48)           # increased range
+    records = random.randint(100, 100000)      # increased range
+    delay = random.randint(1, 300)             # NEW: strong variation
+
+    # ----------- base loss -----------
+
+    base_loss = (
+        downtime * COST_PER_HOUR_DOWNTIME +
+        records * COST_PER_RECORD +
+        delay * COST_PER_DELAY
+    )
+
+    # ----------- apply weights -----------
+
+    operational_loss = base_loss \
+        * attack_weight[attack_type] \
+        * system_weight[system] \
+        * security_weight[security]
+
+    # ----------- add randomness (VERY IMPORTANT) -----------
+
+    noise = random.randint(-50000, 50000)
+    operational_loss += noise
+
+    # prevent negative values
+    if operational_loss < 0:
+        operational_loss = abs(operational_loss)
 
     data.append([
         attack_type,
@@ -40,14 +80,13 @@ for _ in range(100):  # generate 100 incidents
         system,
         downtime,
         records,
-        detection_delay,
+        delay,
         security,
         operational_loss
     ])
 
-# -----------------------------
-# 4. Create DataFrame & save
-# -----------------------------
+# ----------- dataframe -----------
+
 columns = [
     "attack_type",
     "attack_vector",
@@ -60,10 +99,9 @@ columns = [
 ]
 
 df = pd.DataFrame(data, columns=columns)
-df.to_csv(
-    r"C:\Users\sahukari naveena\OneDrive\Desktop\MINI_PROJECT\Cyber_Operational_Loss_Prediction\data\raw_data\cyber_healthcare_data.csv",
-    index=False
-)
 
+# ----------- save -----------
 
-print("Dataset created successfully: cyber_healthcare_data.csv")
+df.to_csv("data/cyber_healthcare_data.csv", index=False)
+
+print("✅ Dataset generated successfully with dynamic behavior")

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
-<title>Cyber Impact Simulator</title>
+<title>CyberMed Insight</title>
 
 <style>
 
@@ -37,34 +36,38 @@ font-weight:bold;
 color:#1b4ed8;
 }
 
-.nav a{
-margin-right:20px;
-text-decoration:none;
-color:#333;
-font-weight:500;
-}
-
-.nav a:hover{
-color:#1e40af;
+.user{
+font-size:14px;
+color:#555;
 }
 
 /* HERO */
 
 .hero{
-padding:50px 80px 20px 80px;
+padding:60px 80px 20px 80px;
+}
+
+.tag{
+display:inline-block;
+background:#eef2ff;
+padding:8px 14px;
+border-radius:20px;
+font-size:13px;
+color:#3b5bdb;
+margin-bottom:20px;
 }
 
 .hero h1{
-font-size:38px;
+font-size:42px;
+margin-bottom:10px;
 }
 
-.hero span{
-color:#2aa7b8;
+.hero h1 span{
+color:#2a9fd6;
 }
 
 .hero p{
 color:#666;
-margin-top:10px;
 }
 
 /* MAIN LAYOUT */
@@ -81,7 +84,7 @@ padding:40px 80px;
 background:white;
 padding:30px;
 border-radius:16px;
-box-shadow:0 8px 25px rgba(0,0,0,0.08);
+box-shadow:0 8px 25px rgba(0,0,0,0.1);
 flex:1;
 }
 
@@ -124,23 +127,27 @@ cursor:pointer;
 /* RESULT PANEL */
 
 .result-box{
-text-align:center;
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+color:#777;
 }
 
-.result-box h1{
-font-size:42px;
-margin-top:10px;
+.icon{
+font-size:50px;
+margin-bottom:20px;
+}
+.nav a{
+margin-right:20px;
+text-decoration:none;
+color:#333;
+font-weight:500;
+}
+
+.nav a:hover{
 color:#1e40af;
-}
-
-.risk{
-margin-top:10px;
-font-weight:bold;
-}
-
-.explain{
-margin-top:20px;
-text-align:left;
 }
 
 </style>
@@ -148,19 +155,31 @@ text-align:left;
 </head>
 
 <body>
-
-<!-- HEADER -->
-
 <div class="header">
 
-<div class="logo">CyberMed Insight</div>
+<div class="logo">
+CyberMed Insight
+</div>
 
 <div class="nav">
-<a href="/simulator/">Simulator</a>
+
+<a href="/home/">Simulator</a>
+
 <a href="/dashboard/">Dashboard</a>
+
 <a href="/analytics/">Analytics</a>
+
 <a href="/reports/">Reports</a>
+
 </div>
+
+<div class="user">
+Active Session
+</div>
+
+</div>
+<!-- HEADER -->
+
 
 </div>
 
@@ -169,22 +188,32 @@ text-align:left;
 
 <div class="hero">
 
-<h1>Cyber Impact <span>Simulator</span></h1>
+<div class="tag">
+Impact Assessment Platform
+</div>
 
-<p>Simulate cyber attack scenarios and estimate operational loss</p>
+<h1>Cyber Impact <span>Intelligence</span></h1>
+
+<p>
+Analyze attack scenarios and receive actionable response guidance
+for your healthcare organization
+</p>
 
 </div>
 
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 
 <div class="container">
 
-<!-- LEFT PANEL (FORM) -->
+<!-- SCENARIO FORM -->
 
 <div class="card">
 
 <h3>Scenario Parameters</h3>
+<p style="color:#777;font-size:13px;">
+Define the attack scenario for impact assessment
+</p>
 
 <form id="impactForm">
 
@@ -230,13 +259,13 @@ text-align:left;
 </div>
 
 <div>
-<label>Downtime Hours</label>
-<input type="number" name="downtime" value="12">
+<label>Downtime Duration</label>
+<input type="number" name="downtime" value="24">
 </div>
 
 <div>
 <label>Detection Delay</label>
-<input type="number" name="delay" value="20">
+<input type="number" name="delay" value="2">
 </div>
 
 </div>
@@ -244,28 +273,38 @@ text-align:left;
 <label style="margin-top:10px;">Records Compromised</label>
 <input type="number" name="records" value="1000">
 
-<button type="submit">⚡ Assess Impact</button>
+<button type="submit">
+⚡ Assess Impact
+</button>
 
 </form>
 
 </div>
 
 
-<!-- RIGHT PANEL (RESULT) -->
+<!-- RESULT PANEL -->
 
 <div class="card">
 
-<div class="result-box">
+<h3>Impact Assessment</h3>
 
-<p>Predicted Operational Loss</p>
+<div style="margin-top:20px">
 
-<h1 id="predictedLoss">$0</h1>
+<p style="color:#777">Predicted Operational Loss</p>
 
-<div class="risk" id="riskLevel">
-Waiting for analysis
+<h1 id="predictedLoss">₹ 0</h1>
+
 </div>
 
-<div class="explain">
+<div style="margin-top:20px">
+
+<p>Impact Severity</p>
+
+<h3 id="riskLevel">Waiting for analysis</h3>
+
+</div>
+
+<div style="margin-top:30px">
 
 <h4>AI Explainability</h4>
 
@@ -278,50 +317,55 @@ Waiting for analysis
 </div>
 
 </div>
-
 </div>
 
 </div>
-
-
-<!-- JAVASCRIPT -->
-
 <script>
 
 document.getElementById("impactForm").addEventListener("submit", function(e){
 
-e.preventDefault()
+e.preventDefault();
 
-let formData = new FormData(this)
+const form = document.getElementById("impactForm");
+const formData = new FormData(form);
 
 fetch("/predict/",{
 method:"POST",
+headers:{
+"X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+},
 body:formData
 })
-.then(res => res.json())
+
+.then(response => response.json())
+
 .then(data => {
 
+console.log(data);
+
 document.getElementById("predictedLoss").innerText =
-"$" + data.prediction
+"₹ " + data.prediction;
 
 document.getElementById("riskLevel").innerText =
-data.risk
+data.risk;
 
 document.getElementById("downtimeImpact").innerText =
-data.shap["Downtime"]
+data.shap["Downtime"];
 
 document.getElementById("recordsImpact").innerText =
-data.shap["Records"]
+data.shap["Records"];
 
 document.getElementById("delayImpact").innerText =
-data.shap["Detection Delay"]
+data.shap["Detection Delay"];
 
 })
 
-})
+.catch(error => {
+console.error("Error:", error);
+});
+
+});
 
 </script>
-
 </body>
-
 </html>

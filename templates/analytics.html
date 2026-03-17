@@ -3,16 +3,23 @@
 <html>
 
 <head>
-
 <title>Analytics</title>
 <link rel="stylesheet" href="/static/style.css">
+
+<style>
+.explanation {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+</style>
 
 </head>
 
 <body>
 
 <div class="header">
-
 <div class="logo">CyberMed Insight</div>
 
 <div class="nav">
@@ -21,39 +28,62 @@
 <a href="/analytics/">Analytics</a>
 <a href="/reports/">Reports</a>
 </div>
-
 </div>
 
 <div class="hero">
-
 <h1>Cyber Risk <span>Analytics</span></h1>
-
 <p>Visual insights from simulated cyber incidents</p>
-
 </div>
 
 <div class="container">
 
+<!-- 1️⃣ ATTACK DISTRIBUTION -->
 <div class="card">
 
 <h3>Attack Distribution</h3>
 
 <img src="{% static 'graphs/attack_distribution.png' %}" width="100%">
 
+<div class="explanation">
+1. This bar chart shows the distribution of different cyber attack types in the dataset.<br>
+2. The X-axis represents attack types, and the Y-axis represents their frequency.<br>
+3. Ransomware has the highest occurrence, indicating it is the most common threat.<br>
+4. Phishing, DDoS, and Malware follow with slightly lower frequencies.<br>
+5. This helps identify which attacks are most frequent and where security focus is needed.
 </div>
 
+</div>
+
+<!-- 2️⃣ SHAP / LOSS VS DOWNTIME -->
 <div class="card">
 
-<h3>Loss vs Downtime</h3>
+<h3>Loss vs Downtime (Feature Impact)</h3>
 
 <img src="{% static 'graphs/loss_vs_downtime.png' %}" width="100%">
+
+<div class="explanation">
+1. This graph shows the SHAP analysis, explaining how each feature impacts the predicted loss.<br>
+2. The X-axis represents impact on prediction, where right increases loss and left decreases it.<br>
+3. Each dot represents a data point, and color shows feature value (blue = low, pink = high).<br>
+4. Records compromised and downtime have the highest influence on loss.<br>
+5. Other features like attack type and security level have smaller but visible effects.
 </div>
 
+</div>
+
+<!-- 3️⃣ LOSS VS DETECTION DELAY -->
 <div class="card">
 
 <h3>Loss vs Detection Delay</h3>
 
 <img src="{% static 'graphs/loss_vs_detection_delay.png' %}" width="100%">
+
+<div class="explanation">
+1. This scatter plot shows the relationship between detection delay and operational loss.<br>
+2. The X-axis represents detection delay, and the Y-axis represents financial loss.<br>
+3. Each point represents a simulated cyber attack scenario.<br>
+4. As detection delay increases, the loss generally increases.<br>
+5. This shows that faster detection can significantly reduce damage.
 </div>
 
 </div>

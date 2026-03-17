@@ -1,86 +1,78 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
 
-import os
 import joblib
 import numpy as np
+import pandas as pd
 import shap
 
 from .models import CyberScenario
 from django.db.models import Avg, Max
 
-
-import matplotlib
-matplotlib.use("Agg")   # Prevents GUI errors in Django
-
-import matplotlib.pyplot as plt
-
-
 # ---------------- LOAD MODEL ----------------
 
-# Load ML model once when server starts
 model = joblib.load("models/loss_prediction_model.pkl")
+
 attack_map = {
-"Ransomware":0,
-"Phishing":1,
-"DDoS":2,
-"Malware":3
+    "Ransomware": 0,
+    "Phishing": 1,
+    "DDoS": 2,
+    "Malware": 3
 }
 
 vector_map = {
-"Email":0,
-"Network":1,
-"USB":2
+    "Email": 0,
+    "Network": 1,
+    "USB": 2
 }
 
 system_map = {
-"EHR":0,
-"Billing":1,
-"PACS":2
+    "EHR": 0,
+    "Billing": 1,
+    "PACS": 2
 }
 
 security_map = {
-"Low":0,
-"Medium":1,
-"High":2
+    "Low": 0,
+    "Medium": 1,
+    "High": 2
 }
 
-# Create SHAP explainer
 explainer = shap.TreeExplainer(model)
 
 
-# ---------------- LOGIN PAGE ----------------
+# ---------------- LOGIN ----------------
 
 def login_page(request):
-
     if request.method == "POST":
-
         username = request.POST['username']
         password = request.POST['password']
 
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
+        if user:
             login(request, user)
             return redirect('home')
 
     return render(request, 'login.html')
 
 
-# ---------------- HOME PAGE ----------------
+# ---------------- HOME ----------------
 
 def home(request):
     return render(request, 'home.html')
 
 
-# ---------------- PREDICTION ----------------
-from django.http import JsonResponse
+# ---------------- PREDICT (FIXED) ----------------
 
 def predict(request):
 
-    if request.method == "POST":
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid request"})
 
-        # -------- GET FORM DATA --------
+    try:
+        # -------- GET DATA --------
 
         attack_str = request.POST.get('attack')
         vector_str = request.POST.get('vector')
@@ -93,27 +85,40 @@ def predict(request):
 
         # -------- MAP VALUES --------
 
-        attack = attack_map[attack_str]
-        vector = vector_map[vector_str]
-        system = system_map[system_str]
-        security = security_map[security_str]
+        attack = attack_map.get(attack_str, 0)
+        vector = vector_map.get(vector_str, 0)
+        system = system_map.get(system_str, 0)
+        security = security_map.get(security_str, 0)
 
-        # -------- MODEL INPUT --------
+        # -------- CREATE INPUT (VERY IMPORTANT FIX) --------
 
-        data = np.array([[attack, vector, system, downtime, records, delay, security]])
+        data = pd.DataFrame([{
+            "attack_type": attack,
+            "attack_vector": vector,
+            "system_affected": system,
+            "downtime_hours": downtime,
+            "records_compromised": records,
+            "detection_delay_minutes": delay,
+            "security_level": security
+        }])
+
+        # -------- PREDICT --------
 
         prediction = float(model.predict(data)[0])
 
-        # -------- RISK CLASSIFICATION --------
+        print("INPUT:", data)
+        print("PREDICTION:", prediction)
 
-        if prediction < 200000:
-            risk = "Low Impact"
-        elif prediction < 600000:
-            risk = "Medium Impact"
+        # -------- RISK --------
+
+        if prediction < 2000000:
+            risk = "Low Risk"
+        elif prediction < 8000000:
+            risk = "Medium Risk"
         else:
-            risk = "High Impact"
+            risk = "High Risk"
 
-        # -------- SAVE SCENARIO --------
+        # -------- SAVE TO DB --------
 
         CyberScenario.objects.create(
             attack_type=attack_str,
@@ -123,53 +128,64 @@ def predict(request):
             predicted_loss=prediction
         )
 
-        # -------- SHAP EXPLAINABILITY --------
+        # -------- SHAP --------
 
         shap_values = explainer.shap_values(data)
 
         shap_data = {
-            "Downtime": round(float(shap_values[0][3]),2),
-            "Records": round(float(shap_values[0][4]),2),
-            "Detection Delay": round(float(shap_values[0][5]),2)
+            "Downtime": round(float(shap_values[0][3]), 2),
+            "Records": round(float(shap_values[0][4]), 2),
+            "Detection Delay": round(float(shap_values[0][5]), 2)
         }
 
-        # -------- JSON RESPONSE FOR DASHBOARD --------
+        # -------- RESPONSE --------
 
         return JsonResponse({
-            "prediction": round(prediction,2),
+            "prediction": round(prediction, 2),
             "risk": risk,
             "shap": shap_data
         })
 
-    return JsonResponse({"error":"Invalid request"})
+    except Exception as e:
+        print("ERROR:", str(e))
+        return JsonResponse({"error": str(e)})
 
-  
+
+# ---------------- DASHBOARD ----------------
+
 def dashboard(request):
 
     total = CyberScenario.objects.count()
 
-    avg_loss = CyberScenario.objects.aggregate(Avg("predicted_loss"))["predicted_loss__avg"]
+    avg_loss = CyberScenario.objects.aggregate(
+        Avg("predicted_loss")
+    )["predicted_loss__avg"]
 
-    highest = CyberScenario.objects.aggregate(Max("predicted_loss"))["predicted_loss__max"]
+    highest = CyberScenario.objects.aggregate(
+        Max("predicted_loss")
+    )["predicted_loss__max"]
 
-    return render(request,"dashboard.html",{
-        "total":total,
-        "avg_loss":round(avg_loss,2) if avg_loss else 0,
-        "highest":highest
+    return render(request, "dashboard.html", {
+        "total": total,
+        "avg_loss": round(avg_loss, 2) if avg_loss else 0,
+        "highest": highest if highest else 0
     })
 
+
+# ---------------- SIMULATOR ----------------
+
 def simulator(request):
+    return render(request, "simulator.html")
 
-    return render(request,"simulator.html")
 
+# ---------------- ANALYTICS ----------------
 
 def analytics(request):
+    return render(request, "analytics.html")
 
-    return render(request,"analytics.html")
 
+# ---------------- REPORTS ----------------
 
 def reports(request):
-
     reports = CyberScenario.objects.all().order_by("-created_at")
-
-    return render(request,"reports.html",{"reports":reports})
+    return render(request, "reports.html", {"reports": reports})

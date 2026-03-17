@@ -292,7 +292,7 @@ Define the attack scenario for impact assessment
 
 <p style="color:#777">Predicted Operational Loss</p>
 
-<h1 id="predictedLoss">$0</h1>
+<h1 id="predictedLoss">₹ 0</h1>
 
 </div>
 
@@ -324,35 +324,47 @@ Define the attack scenario for impact assessment
 
 document.getElementById("impactForm").addEventListener("submit", function(e){
 
-e.preventDefault()
+e.preventDefault();
 
-let formData = new FormData(this)
+const form = document.getElementById("impactForm");
+const formData = new FormData(form);
 
 fetch("/predict/",{
 method:"POST",
+headers:{
+"X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+},
 body:formData
 })
-.then(res => res.json())
+
+.then(response => response.json())
+
 .then(data => {
 
+console.log(data);
+
 document.getElementById("predictedLoss").innerText =
-"$" + data.prediction
+"₹ " + data.prediction;
 
 document.getElementById("riskLevel").innerText =
-data.risk
+data.risk;
 
 document.getElementById("downtimeImpact").innerText =
-data.shap["Downtime"]
+data.shap["Downtime"];
 
 document.getElementById("recordsImpact").innerText =
-data.shap["Records"]
+data.shap["Records"];
 
 document.getElementById("delayImpact").innerText =
-data.shap["Detection Delay"]
+data.shap["Detection Delay"];
 
 })
 
-})
+.catch(error => {
+console.error("Error:", error);
+});
+
+});
 
 </script>
 </body>
