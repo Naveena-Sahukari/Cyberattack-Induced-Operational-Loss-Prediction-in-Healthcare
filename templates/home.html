@@ -6,363 +6,521 @@
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:"Segoe UI",Arial;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial;
 }
 
-body{
-background:#f5f7fb;
-color:#222;
+body {
+  background: #f5f7fb;
+  color: #222;
 }
 
 /* HEADER */
-
-.header{
-height:70px;
-background:white;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 40px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
+.header {
+  height: 70px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.logo{
-font-size:20px;
-font-weight:bold;
-color:#1b4ed8;
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1b4ed8;
 }
 
-.user{
-font-size:14px;
-color:#555;
+.nav a {
+  margin-right: 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  color: #1e40af;
+}
+
+.user {
+  font-size: 14px;
+  color: #555;
 }
 
 /* HERO */
-
-.hero{
-padding:60px 80px 20px 80px;
+.hero {
+  padding: 50px 80px 20px 80px;
 }
 
-.tag{
-display:inline-block;
-background:#eef2ff;
-padding:8px 14px;
-border-radius:20px;
-font-size:13px;
-color:#3b5bdb;
-margin-bottom:20px;
+.tag {
+  display: inline-block;
+  background: #eef2ff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #3b5bdb;
+  margin-bottom: 20px;
 }
 
-.hero h1{
-font-size:42px;
-margin-bottom:10px;
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
 }
 
-.hero h1 span{
-color:#2a9fd6;
+.hero h1 span {
+  color: #2a9fd6;
 }
 
-.hero p{
-color:#666;
+.hero p {
+  color: #666;
 }
 
 /* MAIN LAYOUT */
-
-.container{
-display:flex;
-gap:40px;
-padding:40px 80px;
+.container {
+  display: flex;
+  gap: 30px;
+  padding: 30px 80px 60px 80px;
 }
 
-/* CARD */
-
-.card{
-background:white;
-padding:30px;
-border-radius:16px;
-box-shadow:0 8px 25px rgba(0,0,0,0.1);
-flex:1;
+/* CARDS */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  flex: 1;
 }
 
 /* FORM */
-
-.form-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-margin-top:20px;
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 20px;
 }
 
-label{
-font-size:13px;
-color:#444;
+label {
+  font-size: 13px;
+  color: #444;
+  display: block;
+  margin-top: 5px;
 }
 
-input,select{
-width:100%;
-padding:10px;
-border-radius:8px;
-border:1px solid #ddd;
-margin-top:5px;
+input, select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-top: 5px;
+  font-size: 14px;
 }
 
 /* BUTTON */
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #1e40af, #2aa7b8);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
 
-button{
-margin-top:20px;
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-background:linear-gradient(90deg,#1e40af,#2aa7b8);
-color:white;
-font-size:16px;
-cursor:pointer;
+button:hover {
+  opacity: 0.9;
 }
 
 /* RESULT PANEL */
-
-.result-box{
-height:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-color:#777;
+.result-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
 }
 
-.icon{
-font-size:50px;
-margin-bottom:20px;
-}
-.nav a{
-margin-right:20px;
-text-decoration:none;
-color:#333;
-font-weight:500;
+.loss-amount {
+  font-size: 38px;
+  font-weight: bold;
+  margin: 8px 0;
 }
 
-.nav a:hover{
-color:#1e40af;
+.risk-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.risk-low    { background: #dcfce7; color: #166534; }
+.risk-medium { background: #fef9c3; color: #854d0e; }
+.risk-high   { background: #fee2e2; color: #991b1b; }
+
+/* SHAP BARS */
+.shap-row {
+  margin: 8px 0;
+}
+
+.shap-label {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.shap-bar-track {
+  background: #f0f0f0;
+  border-radius: 6px;
+  height: 10px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.shap-bar-fill {
+  height: 10px;
+  border-radius: 6px;
+  transition: width 0.6s ease;
+}
+
+/* RECOMMENDATIONS */
+.rec-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #f0fdf4;
+  border-left: 4px solid #16a34a;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #14532d;
+}
+
+.rec-item.urgent {
+  background: #fef2f2;
+  border-left-color: #dc2626;
+  color: #7f1d1d;
+}
+
+.rec-icon {
+  font-size: 16px;
+  margin-top: 1px;
+}
+
+/* LOADING SPINNER */
+.spinner {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  font-size: 14px;
 }
 
 </style>
-
 </head>
 
 <body>
-<div class="header">
 
-<div class="logo">
-CyberMed Insight
-</div>
-
-<div class="nav">
-
-<a href="/home/">Simulator</a>
-
-<a href="/dashboard/">Dashboard</a>
-
-<a href="/analytics/">Analytics</a>
-
-<a href="/reports/">Reports</a>
-
-</div>
-
-<div class="user">
-Active Session
-</div>
-
-</div>
 <!-- HEADER -->
-
-
+<div class="header">
+  <div class="logo">CyberMed Insight</div>
+  <div class="nav">
+    <a href="/home/">Simulator</a>
+    <a href="/dashboard/">Dashboard</a>
+    <a href="/analytics/">Analytics</a>
+    <a href="/reports/">Reports</a>
+  </div>
+  <div class="user">Active Session</div>
 </div>
-
+<!-- FIX: removed stray extra </div> that was here -->
 
 <!-- HERO -->
-
 <div class="hero">
-
-<div class="tag">
-Impact Assessment Platform
+  <div class="tag">Impact Assessment Platform</div>
+  <h1>Cyber Impact <span>Intelligence</span></h1>
+  <p>Analyze attack scenarios and receive actionable response guidance for your healthcare organization</p>
 </div>
-
-<h1>Cyber Impact <span>Intelligence</span></h1>
-
-<p>
-Analyze attack scenarios and receive actionable response guidance
-for your healthcare organization
-</p>
-
-</div>
-
 
 <!-- MAIN -->
-
 <div class="container">
 
-<!-- SCENARIO FORM -->
+  <!-- LEFT: SCENARIO FORM -->
+  <div class="card">
 
-<div class="card">
+    <h3>Scenario Parameters</h3>
+    <p style="color:#777; font-size:13px; margin-top:5px;">Define the attack scenario for impact assessment</p>
 
-<h3>Scenario Parameters</h3>
-<p style="color:#777;font-size:13px;">
-Define the attack scenario for impact assessment
-</p>
+    <form id="impactForm">
+      {% csrf_token %}
 
-<form id="impactForm">
+      <div class="form-grid">
 
-{% csrf_token %}
+        <div>
+          <label>Attack Type</label>
+          <select name="attack">
+            <option>Ransomware</option>
+            <option>Phishing</option>
+            <option>DDoS</option>
+            <option>Malware</option>
+          </select>
+        </div>
 
-<div class="form-grid">
+        <div>
+          <label>Attack Vector</label>
+          <select name="vector">
+            <option>Email</option>
+            <option>Network</option>
+            <option>USB</option>
+          </select>
+        </div>
 
-<div>
-<label>Attack Type</label>
-<select name="attack">
-<option>Ransomware</option>
-<option>Phishing</option>
-<option>DDoS</option>
-<option>Malware</option>
-</select>
+        <div>
+          <label>System Affected</label>
+          <select name="system">
+            <option>EHR</option>
+            <option>Billing</option>
+            <option>PACS</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Security Level</label>
+          <select name="security">
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Downtime Duration (hours)</label>
+          <input type="number" name="downtime" value="24" min="1" max="48">
+        </div>
+
+        <div>
+          <label>Detection Delay (minutes)</label>
+          <input type="number" name="delay" value="60" min="1" max="300">
+        </div>
+
+      </div>
+
+      <label style="margin-top:15px;">Records Compromised</label>
+      <input type="number" name="records" value="1000" min="100" max="100000">
+
+      <button type="submit">⚡ Assess Impact</button>
+
+    </form>
+
+  </div>
+
+
+  <!-- RIGHT: RESULT PANEL -->
+  <div class="card" id="resultPanel">
+
+    <h3>Impact Assessment</h3>
+
+    <!-- Default state -->
+    <div id="defaultState" style="text-align:center; padding:40px 0; color:#aaa;">
+      <div style="font-size:50px; margin-bottom:15px;">🛡️</div>
+      <p>Fill in the scenario parameters and click<br><strong>Assess Impact</strong> to see results</p>
+    </div>
+
+    <!-- Loading -->
+    <div class="spinner" id="loadingState">
+      ⏳ Analyzing scenario...
+    </div>
+
+    <!-- Results (hidden until prediction) -->
+    <div id="resultsState" style="display:none;">
+
+      <!-- Predicted Loss -->
+      <div class="result-section">
+        <p style="color:#777; font-size:13px;">Predicted Operational Loss</p>
+        <div class="loss-amount" id="predictedLoss">₹ 0</div>
+        <span class="risk-badge" id="riskBadge">—</span>
+      </div>
+
+      <!-- AI Explainability (SHAP) -->
+      <div class="result-section">
+        <h4 style="margin-bottom:14px;">🧠 AI Explainability (SHAP)</h4>
+        <p style="font-size:12px; color:#888; margin-bottom:12px;">
+          Each bar shows how much that factor contributed to the predicted loss.
+          Positive = increased loss. Negative = reduced loss.
+        </p>
+
+        <div class="shap-row">
+          <div class="shap-label">
+            <span>Downtime Duration</span>
+            <span id="shapDowntime">—</span>
+          </div>
+          <div class="shap-bar-track">
+            <div class="shap-bar-fill" id="barDowntime" style="background:#ef4444; width:0%"></div>
+          </div>
+        </div>
+
+        <div class="shap-row">
+          <div class="shap-label">
+            <span>Records Compromised</span>
+            <span id="shapRecords">—</span>
+          </div>
+          <div class="shap-bar-track">
+            <div class="shap-bar-fill" id="barRecords" style="background:#f97316; width:0%"></div>
+          </div>
+        </div>
+
+        <div class="shap-row">
+          <div class="shap-label">
+            <span>Detection Delay</span>
+            <span id="shapDelay">—</span>
+          </div>
+          <div class="shap-bar-track">
+            <div class="shap-bar-fill" id="barDelay" style="background:#eab308; width:0%"></div>
+          </div>
+        </div>
+
+        <div class="shap-row">
+          <div class="shap-label">
+            <span>Attack Type</span>
+            <span id="shapAttack">—</span>
+          </div>
+          <div class="shap-bar-track">
+            <div class="shap-bar-fill" id="barAttack" style="background:#8b5cf6; width:0%"></div>
+          </div>
+        </div>
+
+        <div class="shap-row">
+          <div class="shap-label">
+            <span>Security Level</span>
+            <span id="shapSecurity">—</span>
+          </div>
+          <div class="shap-bar-track">
+            <div class="shap-bar-fill" id="barSecurity" style="background:#22c55e; width:0%"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Recommendations -->
+      <!-- FIX: this entire section was missing — recommendations were computed in views.py but never displayed -->
+      <div class="result-section">
+        <h4 style="margin-bottom:14px;">⚡ Recommended Actions</h4>
+        <div id="recommendationsList"></div>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
-<div>
-<label>Attack Vector</label>
-<select name="vector">
-<option>Email</option>
-<option>Network</option>
-<option>USB</option>
-</select>
-</div>
 
-<div>
-<label>System Affected</label>
-<select name="system">
-<option>EHR</option>
-<option>Billing</option>
-<option>PACS</option>
-</select>
-</div>
-
-<div>
-<label>Security Level</label>
-<select name="security">
-<option>Low</option>
-<option>Medium</option>
-<option>High</option>
-</select>
-</div>
-
-<div>
-<label>Downtime Duration</label>
-<input type="number" name="downtime" value="24">
-</div>
-
-<div>
-<label>Detection Delay</label>
-<input type="number" name="delay" value="2">
-</div>
-
-</div>
-
-<label style="margin-top:10px;">Records Compromised</label>
-<input type="number" name="records" value="1000">
-
-<button type="submit">
-⚡ Assess Impact
-</button>
-
-</form>
-
-</div>
-
-
-<!-- RESULT PANEL -->
-
-<div class="card">
-
-<h3>Impact Assessment</h3>
-
-<div style="margin-top:20px">
-
-<p style="color:#777">Predicted Operational Loss</p>
-
-<h1 id="predictedLoss">₹ 0</h1>
-
-</div>
-
-<div style="margin-top:20px">
-
-<p>Impact Severity</p>
-
-<h3 id="riskLevel">Waiting for analysis</h3>
-
-</div>
-
-<div style="margin-top:30px">
-
-<h4>AI Explainability</h4>
-
-<p>Downtime Impact: <span id="downtimeImpact">0</span></p>
-
-<p>Records Impact: <span id="recordsImpact">0</span></p>
-
-<p>Detection Delay Impact: <span id="delayImpact">0</span></p>
-
-</div>
-
-</div>
-</div>
-
-</div>
 <script>
 
-document.getElementById("impactForm").addEventListener("submit", function(e){
+document.getElementById("impactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-e.preventDefault();
+  // Show loading, hide others
+  document.getElementById("defaultState").style.display  = "none";
+  document.getElementById("loadingState").style.display  = "block";
+  document.getElementById("resultsState").style.display  = "none";
 
-const form = document.getElementById("impactForm");
-const formData = new FormData(form);
+  const form     = document.getElementById("impactForm");
+  const formData = new FormData(form);
 
-fetch("/predict/",{
-method:"POST",
-headers:{
-"X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-},
-body:formData
-})
+  fetch("/predict/", {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+    },
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
 
-.then(response => response.json())
+    if (data.error) {
+      alert("Error: " + data.error);
+      document.getElementById("loadingState").style.display = "none";
+      document.getElementById("defaultState").style.display = "block";
+      return;
+    }
 
-.then(data => {
+    // Hide loading, show results
+    document.getElementById("loadingState").style.display = "none";
+    document.getElementById("resultsState").style.display = "block";
 
-console.log(data);
+    // ---- Predicted Loss ----
+    document.getElementById("predictedLoss").innerText =
+      "₹ " + Number(data.prediction).toLocaleString("en-IN");
 
-document.getElementById("predictedLoss").innerText =
-"₹ " + data.prediction;
+    // ---- Risk Badge ----
+    // FIX: views.py sends "Low Risk"/"Medium Risk"/"High Risk"
+    // this JS now matches those exact strings
+    const riskBadge = document.getElementById("riskBadge");
+    riskBadge.innerText = data.risk;
+    riskBadge.className = "risk-badge";
 
-document.getElementById("riskLevel").innerText =
-data.risk;
+    if (data.risk === "High Risk") {
+      riskBadge.classList.add("risk-high");
+    } else if (data.risk === "Medium Risk") {
+      riskBadge.classList.add("risk-medium");
+    } else {
+      riskBadge.classList.add("risk-low");
+    }
 
-document.getElementById("downtimeImpact").innerText =
-data.shap["Downtime"];
+    // ---- SHAP Values ----
+    const shap = data.shap;
 
-document.getElementById("recordsImpact").innerText =
-data.shap["Records"];
+    // Get max absolute value for proportional bar widths
+    const allVals = [
+      Math.abs(shap["Downtime"]),
+      Math.abs(shap["Records"]),
+      Math.abs(shap["Detection Delay"]),
+      Math.abs(shap["Attack Type"] || 0),
+      Math.abs(shap["Security Level"] || 0)
+    ];
+    const maxShap = Math.max(...allVals) || 1;
 
-document.getElementById("delayImpact").innerText =
-data.shap["Detection Delay"];
+    function setShap(labelId, barId, value) {
+      document.getElementById(labelId).innerText = (value >= 0 ? "+" : "") + value.toLocaleString();
+      const pct = Math.min((Math.abs(value) / maxShap) * 100, 100);
+      document.getElementById(barId).style.width = pct + "%";
+    }
 
-})
+    setShap("shapDowntime", "barDowntime", shap["Downtime"]);
+    setShap("shapRecords",  "barRecords",  shap["Records"]);
+    setShap("shapDelay",    "barDelay",    shap["Detection Delay"]);
+    setShap("shapAttack",   "barAttack",   shap["Attack Type"] || 0);
+    setShap("shapSecurity", "barSecurity", shap["Security Level"] || 0);
 
-.catch(error => {
-console.error("Error:", error);
-});
+    // ---- Recommendations ----
+    // FIX: views.py now sends recommendations array — displayed here
+    const recList = document.getElementById("recommendationsList");
+    recList.innerHTML = "";
+
+    const urgentKeywords = ["Isolate", "Notify", "Activate", "Upgrade"];
+
+    data.recommendations.forEach(function(rec) {
+      const isUrgent = urgentKeywords.some(k => rec.includes(k));
+      const div      = document.createElement("div");
+      div.className  = "rec-item" + (isUrgent ? " urgent" : "");
+      div.innerHTML  = `<span class="rec-icon">${isUrgent ? "🔴" : "✅"}</span><span>${rec}</span>`;
+      recList.appendChild(div);
+    });
+
+  })
+  .catch(function(error) {
+    console.error("Fetch error:", error);
+    document.getElementById("loadingState").style.display = "none";
+    document.getElementById("defaultState").style.display = "block";
+  });
 
 });
 

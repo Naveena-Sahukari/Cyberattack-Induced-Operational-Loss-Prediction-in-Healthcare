@@ -1,0 +1,1 @@
+web: gunicorn cyberloss_project.wsgi

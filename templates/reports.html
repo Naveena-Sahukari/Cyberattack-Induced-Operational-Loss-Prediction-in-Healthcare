@@ -1,69 +1,223 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+<title>Reports — CyberMed Insight</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI",Arial; }
+body { background:#f5f7fb; color:#222; }
 
-<title>Reports</title>
-<link rel="stylesheet" href="/static/style.css">
+.header {
+  height:70px; background:white;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.logo { font-size:20px; font-weight:bold; color:#1b4ed8; }
+.nav a { margin-right:20px; text-decoration:none; color:#333; font-weight:500; }
+.nav a:hover { color:#1e40af; }
+.user { font-size:14px; color:#555; }
 
+.hero { padding:50px 80px 20px 80px; }
+.tag {
+  display:inline-block; background:#eef2ff;
+  padding:8px 14px; border-radius:20px;
+  font-size:13px; color:#3b5bdb; margin-bottom:20px;
+}
+.hero h1 { font-size:40px; margin-bottom:8px; }
+.hero h1 span { color:#2a9fd6; }
+.hero p { color:#666; }
+
+.section { padding:20px 80px 60px 80px; }
+
+.filter-bar {
+  display:flex; gap:16px; align-items:center;
+  margin-bottom:18px; flex-wrap:wrap;
+}
+.filter-bar label { font-size:13px; color:#64748b; }
+.filter-bar select {
+  padding:8px 12px; border:1px solid #ddd;
+  border-radius:8px; font-size:13px; color:#334155;
+  background:white; cursor:pointer;
+}
+.filter-bar select:focus { outline:none; border-color:#1e40af; }
+
+.card {
+  background:white; border-radius:16px;
+  padding:30px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.07);
+}
+.card-header {
+  display:flex; justify-content:space-between;
+  align-items:center; margin-bottom:20px;
+}
+.card-header h3 { color:#1e293b; }
+
+.count-tag {
+  background:#eef2ff; color:#3b5bdb;
+  padding:4px 14px; border-radius:12px; font-size:13px;
+}
+
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th {
+  text-align:left; padding:12px 16px;
+  background:#f8fafc; color:#64748b;
+  font-weight:600; font-size:12px;
+  text-transform:uppercase; letter-spacing:0.4px;
+  border-bottom:2px solid #e2e8f0;
+}
+td { padding:13px 16px; border-bottom:1px solid #f1f5f9; color:#334155; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:#f8fafc; }
+
+.atk { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600; }
+.atk-Ransomware { background:#fee2e2; color:#991b1b; }
+.atk-Phishing   { background:#fef9c3; color:#854d0e; }
+.atk-DDoS       { background:#dbeafe; color:#1e40af; }
+.atk-Malware    { background:#f3e8ff; color:#6b21a8; }
+
+.risk { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600; }
+.risk-high   { background:#fee2e2; color:#991b1b; }
+.risk-medium { background:#fef9c3; color:#854d0e; }
+.risk-low    { background:#dcfce7; color:#166534; }
+
+.sys { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:500; background:#f1f5f9; color:#475569; }
+
+.empty-state { text-align:center; padding:60px; color:#94a3b8; }
+</style>
 </head>
 
 <body>
 
 <div class="header">
-
-<div class="logo">CyberMed Insight</div>
-
-<div class="nav">
-<a href="/simulator/">Simulator</a>
-<a href="/dashboard/">Dashboard</a>
-<a href="/analytics/">Analytics</a>
-<a href="/reports/">Reports</a>
-</div>
-
+  <div class="logo">CyberMed Insight</div>
+  <div class="nav">
+    <a href="/home/">Simulator</a>
+    <a href="/dashboard/">Dashboard</a>
+    <a href="/analytics/">Analytics</a>
+    <a href="/reports/">Reports</a>
+  </div>
+  <div class="user">Active Session</div>
 </div>
 
 <div class="hero">
+  <div class="tag">Incident History</div>
+  <h1>Incident <span>Reports</span></h1>
+  <p>Complete log of all cyber attack simulations — filterable by attack type, system, and risk level</p>
+</div>
 
-<h1>Incident <span>Reports</span></h1>
+<div class="section">
 
-<p>History of simulated cyber incidents</p>
+  {% if reports %}
+
+  <div class="filter-bar">
+    <label>Filter by Attack:</label>
+    <select id="filterAttack" onchange="applyFilters()">
+      <option value="all">All Attack Types</option>
+      <option value="Ransomware">Ransomware</option>
+      <option value="Phishing">Phishing</option>
+      <option value="DDoS">DDoS</option>
+      <option value="Malware">Malware</option>
+    </select>
+
+    <label>Filter by System:</label>
+    <select id="filterSystem" onchange="applyFilters()">
+      <option value="all">All Systems</option>
+      <option value="EHR">EHR</option>
+      <option value="Billing">Billing</option>
+      <option value="PACS">PACS</option>
+    </select>
+
+    <label>Filter by Risk:</label>
+    <select id="filterRisk" onchange="applyFilters()">
+      <option value="all">All Risk Levels</option>
+      <option value="High Risk">High Risk</option>
+      <option value="Medium Risk">Medium Risk</option>
+      <option value="Low Risk">Low Risk</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>All Simulations</h3>
+      <span class="count-tag" id="rowCount">{{ reports|length }} records</span>
+    </div>
+
+    <table id="reportTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Attack Type</th>
+          <th>System</th>
+          <th>Downtime</th>
+          <th>Records Exposed</th>
+          <th>Predicted Loss</th>
+          <th>Risk Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reports %}
+        <tr
+          data-attack="{{ r.attack_type }}"
+          data-system="{{ r.system }}"
+          data-risk="{{ r.risk_label }}"
+        >
+          <td style="color:#94a3b8; font-size:13px;">{{ forloop.counter }}</td>
+          <td><span class="atk atk-{{ r.attack_type }}">{{ r.attack_type }}</span></td>
+          <td><span class="sys">{{ r.system }}</span></td>
+          <td>{{ r.downtime }} hrs</td>
+          <td>{{ r.records|default:"—" }}</td>
+          <td><strong>₹ {{ r.predicted_loss|floatformat:0 }}</strong></td>
+          <td><span class="risk {{ r.risk_class }}">{{ r.risk_label }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% else %}
+
+  <div class="card">
+    <div class="empty-state">
+      <div style="font-size:44px; margin-bottom:12px;">📋</div>
+      <p>No reports yet.<br>
+        Run a scenario from the <a href="/home/" style="color:#1e40af;">Simulator</a> to see data here.
+      </p>
+    </div>
+  </div>
+
+  {% endif %}
 
 </div>
 
-<div class="container">
+<script>
+function applyFilters() {
+  const fAttack = document.getElementById("filterAttack").value;
+  const fSystem = document.getElementById("filterSystem").value;
+  const fRisk   = document.getElementById("filterRisk").value;
 
-<div class="card">
+  const rows    = document.querySelectorAll("#reportTable tbody tr");
+  let   visible = 0;
 
-<table>
+  rows.forEach(function(row) {
+    const rowAttack = row.getAttribute("data-attack");
+    const rowSystem = row.getAttribute("data-system");
+    const rowRisk   = row.getAttribute("data-risk");
 
-<tr>
+    const okAttack = fAttack === "all" || rowAttack === fAttack;
+    const okSystem = fSystem === "all" || rowSystem === fSystem;
+    const okRisk   = fRisk   === "all" || rowRisk   === fRisk;
 
-<th>Attack Type</th>
-<th>System</th>
-<th>Downtime</th>
-<th>Predicted Loss</th>
+    if (okAttack && okSystem && okRisk) {
+      row.style.display = "";
+      visible++;
+    } else {
+      row.style.display = "none";
+    }
+  });
 
-</tr>
-
-{% for r in reports %}
-
-<tr>
-
-<td>{{r.attack_type}}</td>
-<td>{{r.system}}</td>
-<td>{{r.downtime}}</td>
-<td>${{r.predicted_loss}}</td>
-
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
-
-</div>
+  document.getElementById("rowCount").innerText = visible + " record" + (visible !== 1 ? "s" : "");
+}
+</script>
 
 </body>
 </html>

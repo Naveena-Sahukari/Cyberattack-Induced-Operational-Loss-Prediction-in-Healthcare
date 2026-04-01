@@ -1,369 +1,425 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>CyberMed Insight</title>
-
+<title>Simulator — CyberMed Insight</title>
 <style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI",Arial; }
+body { background:#f5f7fb; color:#222; }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:"Segoe UI",Arial;
+.header {
+  height:70px; background:white;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.logo { font-size:20px; font-weight:bold; color:#1b4ed8; }
+.nav a { margin-right:20px; text-decoration:none; color:#333; font-weight:500; }
+.nav a:hover { color:#1e40af; }
+.user { font-size:14px; color:#555; }
+
+.hero { padding:50px 80px 20px 80px; }
+.tag {
+  display:inline-block; background:#eef2ff;
+  padding:8px 14px; border-radius:20px;
+  font-size:13px; color:#3b5bdb; margin-bottom:20px;
+}
+.hero h1 { font-size:40px; margin-bottom:8px; }
+.hero h1 span { color:#2a9fd6; }
+.hero p { color:#666; }
+
+.container { padding:20px 80px 60px 80px; }
+
+/* PRESET CARDS */
+.preset-label { font-weight:600; margin-bottom:14px; color:#1e293b; font-size:15px; }
+
+.scenario-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-bottom:32px;
 }
 
-body{
-background:#f5f7fb;
-color:#222;
+.scenario-card {
+  background:white; border-radius:14px; padding:22px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.06);
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  user-select:none;
 }
+.scenario-card:hover { border-color:#93c5fd; box-shadow:0 6px 20px rgba(30,64,175,0.1); }
+.scenario-card.active { border-color:#1e40af; background:#f0f4ff; }
 
-/* HEADER */
+.sc-icon { font-size:32px; margin-bottom:10px; }
+.scenario-card h4 { font-size:14px; color:#1e293b; margin-bottom:6px; }
+.scenario-card p  { font-size:12px; color:#64748b; line-height:1.5; }
 
-.header{
-height:70px;
-background:white;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 40px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
+.sev { display:inline-block; margin-top:10px; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700; }
+.sev-high   { background:#fee2e2; color:#991b1b; }
+.sev-medium { background:#fef9c3; color:#854d0e; }
+.sev-low    { background:#dcfce7; color:#166534; }
+
+/* MAIN AREA */
+.main-area { display:flex; gap:28px; }
+
+.card { background:white; border-radius:16px; padding:28px; box-shadow:0 4px 15px rgba(0,0,0,0.07); }
+.form-card   { flex:1.1; }
+.result-card { flex:1; }
+
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; }
+
+label { font-size:13px; color:#444; display:block; margin-top:4px; }
+input, select {
+  width:100%; padding:10px; border-radius:8px;
+  border:1px solid #ddd; margin-top:5px; font-size:14px;
 }
+input:focus, select:focus { outline:none; border-color:#1e40af; }
 
-.logo{
-font-size:20px;
-font-weight:bold;
-color:#1b4ed8;
+button {
+  margin-top:18px; width:100%; padding:14px;
+  border:none; border-radius:10px;
+  background:linear-gradient(90deg,#1e40af,#2aa7b8);
+  color:white; font-size:15px; cursor:pointer;
+  transition:opacity 0.2s;
 }
+button:hover { opacity:0.9; }
 
-.user{
-font-size:14px;
-color:#555;
+/* RESULT */
+.result-section { margin-top:18px; padding-top:16px; border-top:1px solid #f0f0f0; }
+.loss-amount { font-size:32px; font-weight:bold; margin:6px 0; color:#1e293b; }
+.risk-badge { display:inline-block; padding:5px 16px; border-radius:20px; font-weight:700; font-size:13px; }
+.risk-low    { background:#dcfce7; color:#166534; }
+.risk-medium { background:#fef9c3; color:#854d0e; }
+.risk-high   { background:#fee2e2; color:#991b1b; }
+
+.shap-row { margin:8px 0; }
+.shap-label { font-size:12px; color:#555; margin-bottom:3px; display:flex; justify-content:space-between; }
+.shap-track { background:#f1f5f9; border-radius:6px; height:9px; overflow:hidden; }
+.shap-fill  { height:9px; border-radius:6px; transition:width 0.6s ease; }
+
+.rec-item {
+  display:flex; align-items:flex-start; gap:8px;
+  padding:9px 12px; border-radius:8px;
+  background:#f0fdf4; border-left:3px solid #16a34a;
+  margin-bottom:8px; font-size:13px; color:#14532d;
 }
+.rec-item.urgent { background:#fef2f2; border-left-color:#dc2626; color:#7f1d1d; }
 
-/* HERO */
-
-.hero{
-padding:60px 80px 20px 80px;
-}
-
-.tag{
-display:inline-block;
-background:#eef2ff;
-padding:8px 14px;
-border-radius:20px;
-font-size:13px;
-color:#3b5bdb;
-margin-bottom:20px;
-}
-
-.hero h1{
-font-size:42px;
-margin-bottom:10px;
-}
-
-.hero h1 span{
-color:#2a9fd6;
-}
-
-.hero p{
-color:#666;
-}
-
-/* MAIN LAYOUT */
-
-.container{
-display:flex;
-gap:40px;
-padding:40px 80px;
-}
-
-/* CARD */
-
-.card{
-background:white;
-padding:30px;
-border-radius:16px;
-box-shadow:0 8px 25px rgba(0,0,0,0.1);
-flex:1;
-}
-
-/* FORM */
-
-.form-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-margin-top:20px;
-}
-
-label{
-font-size:13px;
-color:#444;
-}
-
-input,select{
-width:100%;
-padding:10px;
-border-radius:8px;
-border:1px solid #ddd;
-margin-top:5px;
-}
-
-/* BUTTON */
-
-button{
-margin-top:20px;
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-background:linear-gradient(90deg,#1e40af,#2aa7b8);
-color:white;
-font-size:16px;
-cursor:pointer;
-}
-
-/* RESULT PANEL */
-
-.result-box{
-height:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-color:#777;
-}
-
-.icon{
-font-size:50px;
-margin-bottom:20px;
-}
-.nav a{
-margin-right:20px;
-text-decoration:none;
-color:#333;
-font-weight:500;
-}
-
-.nav a:hover{
-color:#1e40af;
-}
-
+.loading { display:none; text-align:center; padding:30px; color:#94a3b8; font-size:14px; }
 </style>
-
 </head>
 
 <body>
-<div class="header">
 
-<div class="logo">
-CyberMed Insight
-</div>
-
-<div class="nav">
-
-<a href="/home/">Simulator</a>
-
-<a href="/dashboard/">Dashboard</a>
-
-<a href="/analytics/">Analytics</a>
-
-<a href="/reports/">Reports</a>
-
-</div>
-
-<div class="user">
-Active Session
-</div>
-
-</div>
 <!-- HEADER -->
-
-
+<div class="header">
+  <div class="logo">CyberMed Insight</div>
+  <div class="nav">
+    <a href="/home/">Simulator</a>
+    <a href="/dashboard/">Dashboard</a>
+    <a href="/analytics/">Analytics</a>
+    <a href="/reports/">Reports</a>
+  </div>
+  <div class="user">Active Session</div>
 </div>
-
 
 <!-- HERO -->
-
 <div class="hero">
-
-<div class="tag">
-Impact Assessment Platform
+  <div class="tag">What-If Scenario Simulator</div>
+  <h1>Attack Scenario <span>Simulator</span></h1>
+  <p>Click a preset scenario to auto-fill the form, or build a custom scenario below</p>
 </div>
-
-<h1>Cyber Impact <span>Intelligence</span></h1>
-
-<p>
-Analyze attack scenarios and receive actionable response guidance
-for your healthcare organization
-</p>
-
-</div>
-
-
-<!-- MAIN -->
 
 <div class="container">
 
-<!-- SCENARIO FORM -->
+  <!-- PRESET SCENARIOS -->
+  <p class="preset-label">Quick Presets — click any card to auto-fill and run instantly</p>
 
-<div class="card">
+  <div class="scenario-grid">
 
-<h3>Scenario Parameters</h3>
-<p style="color:#777;font-size:13px;">
-Define the attack scenario for impact assessment
-</p>
+    <div class="scenario-card" id="preset0"
+      onclick="fillScenario(this,'Ransomware','Email','EHR','Low',48,200,80000)">
+      <div class="sc-icon">🔒</div>
+      <h4>Critical Ransomware</h4>
+      <p>EHR encrypted, 48h downtime, low security, 80K records</p>
+      <span class="sev sev-high">High Impact</span>
+    </div>
 
-<form id="impactForm">
+    <div class="scenario-card" id="preset1"
+      onclick="fillScenario(this,'Phishing','Email','Billing','Medium',12,60,15000)">
+      <div class="sc-icon">🎣</div>
+      <h4>Phishing — Billing</h4>
+      <p>Credentials stolen, billing compromised, 15K records</p>
+      <span class="sev sev-medium">Medium Impact</span>
+    </div>
 
-{% csrf_token %}
+    <div class="scenario-card" id="preset2"
+      onclick="fillScenario(this,'DDoS','Network','PACS','High',6,30,500)">
+      <div class="sc-icon">🌐</div>
+      <h4>DDoS — PACS</h4>
+      <p>Imaging temporarily offline, strong security limits damage</p>
+      <span class="sev sev-low">Low Impact</span>
+    </div>
 
-<div class="form-grid">
+    <div class="scenario-card" id="preset3"
+      onclick="fillScenario(this,'Malware','USB','EHR','Low',24,180,45000)">
+      <div class="sc-icon">🦠</div>
+      <h4>USB Malware — EHR</h4>
+      <p>Malware via USB, EHR affected, 24h partial downtime</p>
+      <span class="sev sev-high">High Impact</span>
+    </div>
 
-<div>
-<label>Attack Type</label>
-<select name="attack">
-<option>Ransomware</option>
-<option>Phishing</option>
-<option>DDoS</option>
-<option>Malware</option>
-</select>
+    <div class="scenario-card" id="preset4"
+      onclick="fillScenario(this,'Phishing','Network','Billing','High',4,15,2000)">
+      <div class="sc-icon">🟢</div>
+      <h4>Low-Risk Attempt</h4>
+      <p>Early detection, strong security, minimal exposure</p>
+      <span class="sev sev-low">Low Impact</span>
+    </div>
+
+    <div class="scenario-card" id="preset5"
+      onclick="fillScenario(this,'Ransomware','Network','PACS','Medium',30,120,30000)">
+      <div class="sc-icon">⚠️</div>
+      <h4>Ransomware — PACS</h4>
+      <p>Imaging locked, delayed detection, 30K records</p>
+      <span class="sev sev-medium">Medium Impact</span>
+    </div>
+
+  </div>
+
+  <!-- FORM + RESULT -->
+  <div class="main-area">
+
+    <!-- FORM -->
+    <div class="card form-card">
+      <h3>Scenario Parameters</h3>
+      <p style="color:#777;font-size:13px;margin-top:5px;">Adjust any value and click Run Simulation</p>
+
+      <form id="simForm">
+        {% csrf_token %}
+
+        <div class="form-grid">
+
+          <div>
+            <label>Attack Type</label>
+            <select name="attack" id="f_attack">
+              <option value="Ransomware">Ransomware</option>
+              <option value="Phishing">Phishing</option>
+              <option value="DDoS">DDoS</option>
+              <option value="Malware">Malware</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Attack Vector</label>
+            <select name="vector" id="f_vector">
+              <option value="Email">Email</option>
+              <option value="Network">Network</option>
+              <option value="USB">USB</option>
+            </select>
+          </div>
+
+          <div>
+            <label>System Affected</label>
+            <select name="system" id="f_system">
+              <option value="EHR">EHR</option>
+              <option value="Billing">Billing</option>
+              <option value="PACS">PACS</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Security Level</label>
+            <select name="security" id="f_security">
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Downtime (hours)</label>
+            <input type="number" name="downtime" id="f_downtime" value="24" min="1" max="48">
+          </div>
+
+          <div>
+            <label>Detection Delay (minutes)</label>
+            <input type="number" name="delay" id="f_delay" value="60" min="1" max="300">
+          </div>
+
+        </div>
+
+        <label style="margin-top:14px;">Records Compromised</label>
+        <input type="number" name="records" id="f_records" value="1000" min="100" max="100000">
+
+        <button type="submit">⚡ Run Simulation</button>
+      </form>
+    </div>
+
+    <!-- RESULT PANEL -->
+    <div class="card result-card">
+      <h3>Simulation Result</h3>
+
+      <div id="defaultMsg" style="text-align:center;padding:50px 0;color:#aaa;">
+        <div style="font-size:42px;margin-bottom:12px;">📊</div>
+        <p>Click a preset or run a custom simulation</p>
+      </div>
+
+      <div class="loading" id="loadingMsg">⏳ Running simulation...</div>
+
+      <div id="resultArea" style="display:none;">
+
+        <div class="result-section">
+          <p style="font-size:13px;color:#777;">Predicted Operational Loss</p>
+          <div class="loss-amount" id="simLoss">₹ 0</div>
+          <span class="risk-badge" id="simRisk">—</span>
+        </div>
+
+        <div class="result-section">
+          <h4 style="font-size:14px;margin-bottom:12px;">🧠 Key Drivers (SHAP)</h4>
+
+          <div class="shap-row">
+            <div class="shap-label"><span>Downtime</span><span id="ss_down">—</span></div>
+            <div class="shap-track"><div class="shap-fill" id="sb_down" style="background:#ef4444;width:0%"></div></div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-label"><span>Records</span><span id="ss_rec">—</span></div>
+            <div class="shap-track"><div class="shap-fill" id="sb_rec" style="background:#f97316;width:0%"></div></div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-label"><span>Detection Delay</span><span id="ss_del">—</span></div>
+            <div class="shap-track"><div class="shap-fill" id="sb_del" style="background:#eab308;width:0%"></div></div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-label"><span>Attack Type</span><span id="ss_atk">—</span></div>
+            <div class="shap-track"><div class="shap-fill" id="sb_atk" style="background:#8b5cf6;width:0%"></div></div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-label"><span>Security Level</span><span id="ss_sec">—</span></div>
+            <div class="shap-track"><div class="shap-fill" id="sb_sec" style="background:#22c55e;width:0%"></div></div>
+          </div>
+        </div>
+
+        <div class="result-section">
+          <h4 style="font-size:14px;margin-bottom:12px;">⚡ Recommended Actions</h4>
+          <div id="simRecs"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div>
-<label>Attack Vector</label>
-<select name="vector">
-<option>Email</option>
-<option>Network</option>
-<option>USB</option>
-</select>
-</div>
-
-<div>
-<label>System Affected</label>
-<select name="system">
-<option>EHR</option>
-<option>Billing</option>
-<option>PACS</option>
-</select>
-</div>
-
-<div>
-<label>Security Level</label>
-<select name="security">
-<option>Low</option>
-<option>Medium</option>
-<option>High</option>
-</select>
-</div>
-
-<div>
-<label>Downtime Duration</label>
-<input type="number" name="downtime" value="24">
-</div>
-
-<div>
-<label>Detection Delay</label>
-<input type="number" name="delay" value="2">
-</div>
-
-</div>
-
-<label style="margin-top:10px;">Records Compromised</label>
-<input type="number" name="records" value="1000">
-
-<button type="submit">
-⚡ Assess Impact
-</button>
-
-</form>
-
-</div>
-
-
-<!-- RESULT PANEL -->
-
-<div class="card">
-
-<h3>Impact Assessment</h3>
-
-<div style="margin-top:20px">
-
-<p style="color:#777">Predicted Operational Loss</p>
-
-<h1 id="predictedLoss">₹ 0</h1>
-
-</div>
-
-<div style="margin-top:20px">
-
-<p>Impact Severity</p>
-
-<h3 id="riskLevel">Waiting for analysis</h3>
-
-</div>
-
-<div style="margin-top:30px">
-
-<h4>AI Explainability</h4>
-
-<p>Downtime Impact: <span id="downtimeImpact">0</span></p>
-
-<p>Records Impact: <span id="recordsImpact">0</span></p>
-
-<p>Detection Delay Impact: <span id="delayImpact">0</span></p>
-
-</div>
-
-</div>
-</div>
-
-</div>
 <script>
 
-document.getElementById("impactForm").addEventListener("submit", function(e){
+// FIX: pass the card element explicitly (using 'this' in onclick)
+// FIX: set select by value directly since all options have explicit value attributes
+function fillScenario(card, attack, vector, system, security, downtime, delay, records) {
 
-e.preventDefault();
+  // highlight active card
+  document.querySelectorAll(".scenario-card").forEach(c => c.classList.remove("active"));
+  card.classList.add("active");
 
-const form = document.getElementById("impactForm");
-const formData = new FormData(form);
+  // FIX: directly set .value — works because options have value="" attributes
+  document.getElementById("f_attack").value   = attack;
+  document.getElementById("f_vector").value   = vector;
+  document.getElementById("f_system").value   = system;
+  document.getElementById("f_security").value = security;
+  document.getElementById("f_downtime").value = downtime;
+  document.getElementById("f_delay").value    = delay;
+  document.getElementById("f_records").value  = records;
 
-fetch("/predict/",{
-method:"POST",
-headers:{
-"X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-},
-body:formData
-})
+  // auto-run
+  runSimulation();
+}
 
-.then(response => response.json())
+function runSimulation() {
+  document.getElementById("defaultMsg").style.display  = "none";
+  document.getElementById("loadingMsg").style.display  = "block";
+  document.getElementById("resultArea").style.display  = "none";
 
-.then(data => {
+  const formData = new FormData(document.getElementById("simForm"));
 
-console.log(data);
+  fetch("/predict/", {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+    },
+    body: formData
+  })
+  .then(r => r.json())
+  .then(function(data) {
 
-document.getElementById("predictedLoss").innerText =
-"₹ " + data.prediction;
+    document.getElementById("loadingMsg").style.display = "none";
 
-document.getElementById("riskLevel").innerText =
-data.risk;
+    if (data.error) {
+      alert("Error: " + data.error);
+      document.getElementById("defaultMsg").style.display = "block";
+      return;
+    }
 
-document.getElementById("downtimeImpact").innerText =
-data.shap["Downtime"];
+    document.getElementById("resultArea").style.display = "block";
 
-document.getElementById("recordsImpact").innerText =
-data.shap["Records"];
+    // Loss
+    document.getElementById("simLoss").innerText =
+      "₹ " + Number(data.prediction).toLocaleString("en-IN");
 
-document.getElementById("delayImpact").innerText =
-data.shap["Detection Delay"];
+    // Risk badge
+    const badge = document.getElementById("simRisk");
+    badge.innerText   = data.risk;
+    badge.className   = "risk-badge";
+    if      (data.risk === "High Risk")   badge.classList.add("risk-high");
+    else if (data.risk === "Medium Risk") badge.classList.add("risk-medium");
+    else                                  badge.classList.add("risk-low");
 
-})
+    // SHAP bars
+    const shap   = data.shap;
+    const maxVal = Math.max(
+      Math.abs(shap["Downtime"]        || 0),
+      Math.abs(shap["Records"]         || 0),
+      Math.abs(shap["Detection Delay"] || 0),
+      Math.abs(shap["Attack Type"]     || 0),
+      Math.abs(shap["Security Level"]  || 0)
+    ) || 1;
 
-.catch(error => {
-console.error("Error:", error);
-});
+    function setBar(labelId, barId, val) {
+      document.getElementById(labelId).innerText =
+        (val >= 0 ? "+" : "") + Number(val).toLocaleString();
+      document.getElementById(barId).style.width =
+        Math.min((Math.abs(val) / maxVal) * 100, 100) + "%";
+    }
 
+    setBar("ss_down", "sb_down", shap["Downtime"]        || 0);
+    setBar("ss_rec",  "sb_rec",  shap["Records"]         || 0);
+    setBar("ss_del",  "sb_del",  shap["Detection Delay"] || 0);
+    setBar("ss_atk",  "sb_atk",  shap["Attack Type"]     || 0);
+    setBar("ss_sec",  "sb_sec",  shap["Security Level"]  || 0);
+
+    // Recommendations
+    const recDiv  = document.getElementById("simRecs");
+    recDiv.innerHTML = "";
+    const urgentKw = ["Isolate","Notify","Activate","Upgrade","Switch","Pause"];
+
+    data.recommendations.forEach(function(rec) {
+      const isUrgent = urgentKw.some(k => rec.includes(k));
+      const d        = document.createElement("div");
+      d.className    = "rec-item" + (isUrgent ? " urgent" : "");
+      d.innerHTML    = `<span>${isUrgent ? "🔴" : "✅"}</span><span>${rec}</span>`;
+      recDiv.appendChild(d);
+    });
+
+  })
+  .catch(function(err) {
+    console.error("Fetch error:", err);
+    document.getElementById("loadingMsg").style.display = "none";
+    document.getElementById("defaultMsg").style.display = "block";
+  });
+}
+
+// Manual form submit
+document.getElementById("simForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  runSimulation();
 });
 
 </script>

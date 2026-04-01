@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 
+# FIX: replaced hardcoded absolute Windows path with portable Path-based resolution
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_PATH = BASE_DIR / "data" / "processed_data" / "processed_cyber_healthcare_data.csv"
+
 # Load processed data
-df = pd.read_csv(
-    r"C:\Users\sahukari naveena\OneDrive\Desktop\MINI_PROJECT\Cyber_Operational_Loss_Prediction\data\processed_data\processed_cyber_healthcare_data.csv"
-)
+df = pd.read_csv(DATA_PATH)
 
 # Features and target
 X = df.drop("operational_loss", axis=1)

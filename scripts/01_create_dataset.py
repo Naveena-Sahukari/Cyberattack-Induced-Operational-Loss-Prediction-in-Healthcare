@@ -10,62 +10,62 @@ security_levels = ["Low", "Medium", "High"]
 
 # ----------- cost assumptions -----------
 
-COST_PER_HOUR_DOWNTIME = 200000
-COST_PER_RECORD = 500
-COST_PER_DELAY = 5000   # NEW: detection delay impact
+COST_PER_HOUR_DOWNTIME = 15000    # was 200000
+COST_PER_RECORD        = 50       # was 500
+COST_PER_DELAY         = 300      # was 5000
 
 # ----------- weights -----------
 
 attack_weight = {
     "Ransomware": 1.8,
-    "Phishing": 1.2,
-    "DDoS": 1.4,
-    "Malware": 1.3
+    "Phishing":   1.2,
+    "DDoS":       1.4,
+    "Malware":    1.3
 }
 
 system_weight = {
-    "EHR": 2.0,
+    "EHR":     2.0,
     "Billing": 1.5,
-    "PACS": 1.7
+    "PACS":    1.7
 }
 
 security_weight = {
-    "Low": 1.6,
+    "Low":    1.6,
     "Medium": 1.2,
-    "High": 0.7
+    "High":   0.7
 }
 
 # ----------- dataset -----------
 
 data = []
 
-for _ in range(3000):   # increased data size
+for _ in range(3000):
 
-    attack_type = random.choice(attack_types)
+    attack_type   = random.choice(attack_types)
     attack_vector = random.choice(attack_vectors)
-    system = random.choice(systems_affected)
-    security = random.choice(security_levels)
+    system        = random.choice(systems_affected)
+    security      = random.choice(security_levels)
 
-    downtime = random.randint(1, 48)           # increased range
-    records = random.randint(100, 100000)      # increased range
-    delay = random.randint(1, 300)             # NEW: strong variation
+    downtime = random.randint(1, 48)
+    records  = random.randint(100, 100000)
+    delay    = random.randint(1, 300)
 
     # ----------- base loss -----------
 
     base_loss = (
         downtime * COST_PER_HOUR_DOWNTIME +
-        records * COST_PER_RECORD +
-        delay * COST_PER_DELAY
+        records  * COST_PER_RECORD        +
+        delay    * COST_PER_DELAY
     )
 
     # ----------- apply weights -----------
 
     operational_loss = base_loss \
         * attack_weight[attack_type] \
-        * system_weight[system] \
+        * system_weight[system]      \
         * security_weight[security]
 
-    # ----------- add randomness (VERY IMPORTANT) -----------
+    # ----------- add randomness -----------
 
     noise = random.randint(-50000, 50000)
     operational_loss += noise

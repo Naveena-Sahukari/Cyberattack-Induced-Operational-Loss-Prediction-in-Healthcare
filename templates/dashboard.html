@@ -1,62 +1,219 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+<title>Dashboard — CyberMed Insight</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI",Arial; }
+body { background:#f5f7fb; color:#222; }
 
-<title>Dashboard</title>
-<link rel="stylesheet" href="/static/style.css">
+.header {
+  height:70px; background:white;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.logo { font-size:20px; font-weight:bold; color:#1b4ed8; }
+.nav a { margin-right:20px; text-decoration:none; color:#333; font-weight:500; }
+.nav a:hover { color:#1e40af; }
+.user { font-size:14px; color:#555; }
 
+.hero { padding:50px 80px 20px 80px; }
+.tag {
+  display:inline-block; background:#eef2ff;
+  padding:8px 14px; border-radius:20px;
+  font-size:13px; color:#3b5bdb; margin-bottom:20px;
+}
+.hero h1 { font-size:40px; margin-bottom:8px; }
+.hero h1 span { color:#2a9fd6; }
+.hero p { color:#666; }
+
+/* METRIC CARDS ROW */
+.metrics {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:24px;
+  padding:30px 80px 0 80px;
+}
+
+.metric-card {
+  background:white;
+  border-radius:16px;
+  padding:30px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.07);
+  border-top:4px solid #1e40af;
+}
+
+.metric-card.orange { border-top-color:#f97316; }
+.metric-card.red    { border-top-color:#ef4444; }
+
+.metric-label {
+  font-size:13px;
+  color:#64748b;
+  margin-bottom:10px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+.metric-value {
+  font-size:38px;
+  font-weight:bold;
+  color:#1e293b;
+}
+
+.metric-sub {
+  font-size:13px;
+  color:#94a3b8;
+  margin-top:6px;
+}
+
+/* RECENT TABLE */
+.section {
+  padding:30px 80px 60px 80px;
+}
+
+.card {
+  background:white;
+  border-radius:16px;
+  padding:30px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.07);
+}
+
+.card h3 { margin-bottom:20px; color:#1e293b; }
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+
+th {
+  text-align:left;
+  padding:12px 16px;
+  background:#f8fafc;
+  color:#64748b;
+  font-weight:600;
+  border-bottom:1px solid #e2e8f0;
+}
+
+td {
+  padding:12px 16px;
+  border-bottom:1px solid #f1f5f9;
+  color:#334155;
+}
+
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:#f8fafc; }
+
+.badge {
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:600;
+}
+.badge-high   { background:#fee2e2; color:#991b1b; }
+.badge-medium { background:#fef9c3; color:#854d0e; }
+.badge-low    { background:#dcfce7; color:#166534; }
+
+.empty-state {
+  text-align:center;
+  padding:50px;
+  color:#94a3b8;
+}
+</style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
-
-<div class="logo">CyberMed Insight</div>
-
-<div class="nav">
-<a href="/simulator/">Simulator</a>
-<a href="/dashboard/">Dashboard</a>
-<a href="/analytics/">Analytics</a>
-<a href="/reports/">Reports</a>
+  <div class="logo">CyberMed Insight</div>
+  <div class="nav">
+    <a href="/home/">Simulator</a>
+    <a href="/dashboard/">Dashboard</a>
+    <a href="/analytics/">Analytics</a>
+    <a href="/reports/">Reports</a>
+  </div>
+  <div class="user">Active Session</div>
 </div>
 
-</div>
-
+<!-- HERO -->
 <div class="hero">
+  <div class="tag">Live Intelligence Dashboard</div>
+  <h1>Cyber Risk <span>Dashboard</span></h1>
+  <p>Real-time overview of all simulated cyber incident assessments</p>
+</div>
 
-<h1>Cyber Risk <span>Dashboard</span></h1>
+<!-- METRIC CARDS -->
+<div class="metrics">
 
-<p>Overview of cyber attack simulation results</p>
+  <div class="metric-card">
+    <div class="metric-label">Total Simulations</div>
+    <div class="metric-value">{{ total }}</div>
+    <div class="metric-sub">All-time scenarios assessed</div>
+  </div>
+
+  <div class="metric-card orange">
+    <div class="metric-label">Average Predicted Loss</div>
+    <div class="metric-value">
+      ₹ {% if avg_loss %}{{ avg_loss|floatformat:0 }}{% else %}0{% endif %}
+    </div>
+    <div class="metric-sub">Mean operational impact</div>
+  </div>
+
+  <div class="metric-card red">
+    <div class="metric-label">Highest Predicted Loss</div>
+    <div class="metric-value">
+      ₹ {% if highest %}{{ highest|floatformat:0 }}{% else %}0{% endif %}
+    </div>
+    <div class="metric-sub">Most critical scenario recorded</div>
+  </div>
 
 </div>
 
-<div class="container">
+<!-- RECENT RECORDS TABLE -->
+<div class="section">
+  <div class="card">
+    <h3>Recent Incident Assessments</h3>
 
-<div class="card">
+    {% if reports %}
+    <table>
+      <tr>
+        <th>Attack Type</th>
+        <th>System Affected</th>
+        <th>Downtime (hrs)</th>
+        <th>Records</th>
+        <th>Predicted Loss</th>
+        <th>Risk Level</th>
+      </tr>
+      {% for r in reports %}
+      <tr>
+        <td>{{ r.attack_type }}</td>
+        <td>{{ r.system }}</td>
+        <td>{{ r.downtime }}</td>
+        <td>{{ r.records|default:"—" }}</td>
+        <td><strong>₹ {{ r.predicted_loss|floatformat:0 }}</strong></td>
+        <td>
+          {% if r.predicted_loss >= 8000000 %}
+            <span class="badge badge-high">High Risk</span>
+          {% elif r.predicted_loss >= 2000000 %}
+            <span class="badge badge-medium">Medium Risk</span>
+          {% else %}
+            <span class="badge badge-low">Low Risk</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
 
-<h3>Total Simulations</h3>
+    {% else %}
+    <div class="empty-state">
+      <div style="font-size:44px; margin-bottom:12px;">📋</div>
+      <p>No simulations yet. Run a scenario from the <a href="/home/" style="color:#1e40af;">Simulator</a>.</p>
+    </div>
+    {% endif %}
 
-<h1>{{total}}</h1>
-
-</div>
-
-<div class="card">
-
-<h3>Average Predicted Loss</h3>
-
-<h1>${{avg_loss}}</h1>
-
-</div>
-
-<div class="card">
-
-<h3>Highest Predicted Loss</h3>
-
-<h1>${{highest}}</h1>
-
-</div>
-
+  </div>
 </div>
 
 </body>

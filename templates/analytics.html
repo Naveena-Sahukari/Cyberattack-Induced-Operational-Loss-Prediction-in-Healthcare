@@ -1,94 +1,440 @@
-{% load static %}
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>Analytics</title>
-<link rel="stylesheet" href="/static/style.css">
-
+<title>Analytics — CyberMed Insight</title>
 <style>
-.explanation {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #555;
-    line-height: 1.6;
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI",Arial; }
+body { background:#f5f7fb; color:#222; }
+
+.header {
+  height:70px; background:white;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.logo { font-size:20px; font-weight:bold; color:#1b4ed8; }
+.nav a { margin-right:20px; text-decoration:none; color:#333; font-weight:500; }
+.nav a:hover { color:#1e40af; }
+.user { font-size:14px; color:#555; }
+
+.hero { padding:50px 80px 20px 80px; }
+.tag {
+  display:inline-block; background:#eef2ff;
+  padding:8px 14px; border-radius:20px;
+  font-size:13px; color:#3b5bdb; margin-bottom:20px;
+}
+.hero h1 { font-size:40px; margin-bottom:8px; }
+.hero h1 span { color:#2a9fd6; }
+.hero p { color:#666; }
+
+.section { padding:20px 80px 60px 80px; }
+
+/* CHART GRID */
+.chart-grid {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:24px;
+  margin-bottom:24px;
+}
+
+.chart-grid-full {
+  margin-bottom:24px;
+}
+
+.card {
+  background:white;
+  border-radius:16px;
+  padding:28px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.07);
+}
+
+.card h3 {
+  font-size:16px;
+  color:#1e293b;
+  margin-bottom:6px;
+}
+
+.card p.desc {
+  font-size:13px;
+  color:#64748b;
+  margin-bottom:20px;
+  line-height:1.5;
+}
+
+.chart-wrap {
+  position:relative;
+  width:100%;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  text-align:center;
+  padding:60px 20px;
+  color:#94a3b8;
+}
+.empty-state .icon { font-size:48px; margin-bottom:12px; }
+.empty-state p { font-size:14px; }
+.empty-state a { color:#1e40af; }
+
+/* INSIGHT TAGS */
+.insight {
+  display:inline-block;
+  background:#f0fdf4;
+  border-left:3px solid #16a34a;
+  color:#14532d;
+  font-size:13px;
+  padding:8px 12px;
+  border-radius:0 8px 8px 0;
+  margin-top:14px;
+  width:100%;
 }
 </style>
-
 </head>
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
-<div class="logo">CyberMed Insight</div>
-
-<div class="nav">
-<a href="/simulator/">Simulator</a>
-<a href="/dashboard/">Dashboard</a>
-<a href="/analytics/">Analytics</a>
-<a href="/reports/">Reports</a>
+  <div class="logo">CyberMed Insight</div>
+  <div class="nav">
+    <a href="/home/">Simulator</a>
+    <a href="/dashboard/">Dashboard</a>
+    <a href="/analytics/">Analytics</a>
+    <a href="/reports/">Reports</a>
+  </div>
+  <div class="user">Active Session</div>
 </div>
-</div>
 
+<!-- HERO -->
 <div class="hero">
-<h1>Cyber Risk <span>Analytics</span></h1>
-<p>Visual insights from simulated cyber incidents</p>
+  <div class="tag">Live Visual Analytics</div>
+  <h1>Cyber Risk <span>Analytics</span></h1>
+  <p>
+    All charts update automatically from your simulation data.
+    {% if total %}
+      Based on <strong>{{ total }}</strong> simulation{{ total|pluralize }} run so far.
+    {% else %}
+      Run simulations from the <a href="/home/" style="color:#1e40af;">Simulator</a> to see charts populate.
+    {% endif %}
+  </p>
 </div>
 
-<div class="container">
+{% if total %}
 
-<!-- 1️⃣ ATTACK DISTRIBUTION -->
-<div class="card">
+<div class="section">
 
-<h3>Attack Distribution</h3>
+  <!-- ROW 1: Attack Distribution + Risk Breakdown -->
+  <div class="chart-grid">
 
-<img src="{% static 'graphs/attack_distribution.png' %}" width="100%">
+    <!-- Chart 1: Attack Type Distribution -->
+    <div class="card">
+      <h3>Attack Type Distribution</h3>
+      <p class="desc">
+        How many simulations were run per attack type.
+        Helps identify which threats are most frequently assessed.
+      </p>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="chartAttackDist"></canvas>
+      </div>
+      <div class="insight">
+        💡 The most simulated attack type indicates the highest perceived risk in your organization.
+      </div>
+    </div>
 
-<div class="explanation">
-1. This bar chart shows the distribution of different cyber attack types in the dataset.<br>
-2. The X-axis represents attack types, and the Y-axis represents their frequency.<br>
-3. Ransomware has the highest occurrence, indicating it is the most common threat.<br>
-4. Phishing, DDoS, and Malware follow with slightly lower frequencies.<br>
-5. This helps identify which attacks are most frequent and where security focus is needed.
+    <!-- Chart 2: Risk Level Breakdown (Pie) -->
+    <div class="card">
+      <h3>Risk Level Breakdown</h3>
+      <p class="desc">
+        Proportion of simulations falling into Low, Medium, and High risk categories
+        based on predicted operational loss thresholds.
+      </p>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="chartRiskPie"></canvas>
+      </div>
+      <div class="insight">
+        💡 A high proportion of High Risk scenarios suggests critical vulnerabilities need urgent attention.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROW 2: Avg Loss by Attack + Avg Loss by System -->
+  <div class="chart-grid">
+
+    <!-- Chart 3: Average Loss by Attack Type -->
+    <div class="card">
+      <h3>Average Predicted Loss by Attack Type</h3>
+      <p class="desc">
+        Which attack type causes the highest average financial and operational loss.
+        Ransomware typically dominates due to its higher weight in the model.
+      </p>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="chartAttackLoss"></canvas>
+      </div>
+      <div class="insight">
+        💡 Prioritize defenses against the attack type with the highest average loss.
+      </div>
+    </div>
+
+    <!-- Chart 4: Average Loss by System Affected -->
+    <div class="card">
+      <h3>Average Predicted Loss by System Affected</h3>
+      <p class="desc">
+        Which hospital system, when compromised, results in the highest predicted loss.
+        EHR attacks are typically the most damaging due to their high operational weight.
+      </p>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="chartSystemLoss"></canvas>
+      </div>
+      <div class="insight">
+        💡 Systems with the highest average loss should receive the most security investment.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROW 3: Loss vs Downtime Scatter (full width) -->
+  <div class="chart-grid-full">
+    <div class="card">
+      <h3>Operational Loss vs Downtime Duration</h3>
+      <p class="desc">
+        Scatter plot of every simulation — X-axis is downtime in hours, Y-axis is predicted operational loss.
+        Confirms that longer downtime is the strongest single driver of operational loss.
+        Each dot is one simulation you ran.
+      </p>
+      <div class="chart-wrap" style="height:300px;">
+        <canvas id="chartScatter"></canvas>
+      </div>
+      <div class="insight">
+        💡 The upward trend confirms: every additional hour of downtime significantly increases operational loss.
+        Faster incident response and backup systems directly reduce financial impact.
+      </div>
+    </div>
+  </div>
+
 </div>
 
+{% else %}
+
+<div class="section">
+  <div class="card">
+    <div class="empty-state">
+      <div class="icon">📊</div>
+      <p>No simulation data yet.<br>
+        Go to the <a href="/home/">Simulator</a>, run a few scenarios, then come back here to see live charts.
+      </p>
+    </div>
+  </div>
 </div>
 
-<!-- 2️⃣ SHAP / LOSS VS DOWNTIME -->
-<div class="card">
+{% endif %}
 
-<h3>Loss vs Downtime (Feature Impact)</h3>
+<!-- Chart.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
-<img src="{% static 'graphs/loss_vs_downtime.png' %}" width="100%">
+<script>
 
-<div class="explanation">
-1. This graph shows the SHAP analysis, explaining how each feature impacts the predicted loss.<br>
-2. The X-axis represents impact on prediction, where right increases loss and left decreases it.<br>
-3. Each dot represents a data point, and color shows feature value (blue = low, pink = high).<br>
-4. Records compromised and downtime have the highest influence on loss.<br>
-5. Other features like attack type and security level have smaller but visible effects.
-</div>
+// ---- Data from Django views.py ----
+const attackLabels  = {{ attack_labels|safe }};
+const attackCounts  = {{ attack_counts|safe }};
+const alossLabels   = {{ aloss_labels|safe }};
+const alossValues   = {{ aloss_values|safe }};
+const sysLabels     = {{ sys_labels|safe }};
+const sysValues     = {{ sys_values|safe }};
+const scatterPoints = {{ scatter_points|safe }};
+const riskCounts    = {{ risk_counts|safe }};
 
-</div>
+// ---- Color sets ----
+const barColors   = ["#3b82f6","#f97316","#10b981","#8b5cf6"];
+const sysColors   = ["#ef4444","#f97316","#3b82f6"];
+const riskColors  = ["#22c55e","#f59e0b","#ef4444"];
 
-<!-- 3️⃣ LOSS VS DETECTION DELAY -->
-<div class="card">
+// ---- Chart 1: Attack Distribution ----
+new Chart(document.getElementById("chartAttackDist"), {
+  type: "bar",
+  data: {
+    labels: attackLabels,
+    datasets: [{
+      label: "Simulations",
+      data: attackCounts,
+      backgroundColor: barColors,
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.parsed.y} simulations`
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { precision: 0 },
+        grid: { color: "#f1f5f9" }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
 
-<h3>Loss vs Detection Delay</h3>
+// ---- Chart 2: Risk Pie ----
+new Chart(document.getElementById("chartRiskPie"), {
+  type: "doughnut",
+  data: {
+    labels: ["Low Risk", "Medium Risk", "High Risk"],
+    datasets: [{
+      data: riskCounts,
+      backgroundColor: riskColors,
+      borderWidth: 2,
+      borderColor: "#fff"
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: { padding: 16, font: { size: 13 } }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.label}: ${ctx.parsed} scenarios`
+        }
+      }
+    }
+  }
+});
 
-<img src="{% static 'graphs/loss_vs_detection_delay.png' %}" width="100%">
+// ---- Chart 3: Avg Loss by Attack Type ----
+new Chart(document.getElementById("chartAttackLoss"), {
+  type: "bar",
+  data: {
+    labels: alossLabels,
+    datasets: [{
+      label: "Avg Predicted Loss (₹)",
+      data: alossValues,
+      backgroundColor: barColors,
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => "₹ " + ctx.parsed.y.toLocaleString("en-IN")
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: val => "₹" + (val >= 1_000_000 ? (val/1_000_000).toFixed(1)+"M" : val.toLocaleString())
+        },
+        grid: { color: "#f1f5f9" }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
 
-<div class="explanation">
-1. This scatter plot shows the relationship between detection delay and operational loss.<br>
-2. The X-axis represents detection delay, and the Y-axis represents financial loss.<br>
-3. Each point represents a simulated cyber attack scenario.<br>
-4. As detection delay increases, the loss generally increases.<br>
-5. This shows that faster detection can significantly reduce damage.
-</div>
+// ---- Chart 4: Avg Loss by System ----
+new Chart(document.getElementById("chartSystemLoss"), {
+  type: "bar",
+  data: {
+    labels: sysLabels,
+    datasets: [{
+      label: "Avg Predicted Loss (₹)",
+      data: sysValues,
+      backgroundColor: sysColors,
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => "₹ " + ctx.parsed.y.toLocaleString("en-IN")
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: val => "₹" + (val >= 1_000_000 ? (val/1_000_000).toFixed(1)+"M" : val.toLocaleString())
+        },
+        grid: { color: "#f1f5f9" }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
 
-</div>
+// ---- Chart 5: Scatter — Loss vs Downtime ----
+new Chart(document.getElementById("chartScatter"), {
+  type: "scatter",
+  data: {
+    datasets: [{
+      label: "Simulation",
+      data: scatterPoints,
+      backgroundColor: "rgba(59,130,246,0.5)",
+      pointRadius: 5,
+      pointHoverRadius: 7,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx =>
+            `Downtime: ${ctx.parsed.x}h  |  Loss: ₹${ctx.parsed.y.toLocaleString("en-IN")}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Downtime (hours)",
+          font: { size: 13 }
+        },
+        grid: { color: "#f1f5f9" }
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Predicted Operational Loss (₹)",
+          font: { size: 13 }
+        },
+        ticks: {
+          callback: val => "₹" + (val >= 1_000_000 ? (val/1_000_000).toFixed(1)+"M" : val.toLocaleString())
+        },
+        grid: { color: "#f1f5f9" }
+      }
+    }
+  }
+});
 
-</div>
-
+</script>
 </body>
 </html>
