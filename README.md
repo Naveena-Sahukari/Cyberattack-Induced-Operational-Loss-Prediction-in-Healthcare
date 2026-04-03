@@ -1,3 +1,123 @@
+# 🏥 CyberMed Insight — Cyberattack-Induced Operational Loss Prediction in Healthcare
+
+> A Machine Learning + Explainable AI web platform that predicts and explains operational losses caused by cyberattacks in healthcare environments.
+
+🔗 **Live Demo:** [https://cybermedinsight.up.railway.app](https://cybermedinsight.up.railway.app)
+
+---
+
+## 📌 Overview
+
+Cyberattacks in healthcare can severely disrupt hospital operations. When critical systems such as Electronic Health Records (EHR), billing systems, or patient management platforms are affected, hospitals face downtime, delayed treatments, financial losses, and compromised patient data.
+
+Most cybersecurity tools focus only on **detecting attacks** — but hospital administrators need answers to operational questions:
+
+- How severe will the operational impact be?
+- What factors are driving the loss?
+- What immediate actions should be taken?
+
+**CyberMed Insight** addresses this gap by developing a **Cyberattack Impact Intelligence System** that:
+- **Predicts** operational loss from cyberattack scenarios
+- **Explains** predictions using Explainable AI (SHAP)
+- **Guides** administrators with actionable risk recommendations
+
+---
+
+## 🚀 Live Deployment
+
+| Platform | URL |
+|----------|-----|
+| Railway | [https://cybermedinsight.up.railway.app](https://cybermedinsight.up.railway.app) |
+
+The application is fully deployed and accessible. Log in with a hospital name and password to access the prediction dashboard.
+
+---
+
+## ✨ Key Features
+
+- 🔐 **Secure Login** — Hospital-specific authentication
+- 🤖 **ML-Powered Prediction** — Random Forest Regressor estimates operational loss
+- 🧠 **Explainable AI** — SHAP values identify which factors drive the predicted loss
+- 📊 **Dynamic Visualizations** — Auto-generated SHAP and impact graphs per prediction
+- 📋 **Decision Support** — Rule-based action recommendations (Low / Medium / High risk)
+- 🔍 **What-If Analysis** — Explore different cyberattack scenarios instantly
+
+---
+
+## 🏗️ System Architecture
+
+```
+Login Page
+    ↓
+User enters cyberattack scenario
+    ↓
+Django Backend receives input
+    ↓
+Random Forest Model → predicts operational loss
+    ↓
+SHAP Explainability → identifies key contributing factors
+    ↓
+Graphs generated dynamically
+    ↓
+Result Dashboard → prediction + analysis + recommendations
+```
+
+---
+
+## 🧰 Technology Stack
+
+| Layer | Technologies |
+|-------|-------------|
+| **Backend** | Python, Django |
+| **Machine Learning** | Scikit-learn (Random Forest Regressor) |
+| **Explainable AI** | SHAP (SHapley Additive Explanations) |
+| **Visualization** | Matplotlib |
+| **Frontend** | HTML, CSS |
+| **Deployment** | Railway |
+
+---
+
+## 📂 Project Structure
+
+```
+Cyberattack-Induced-Operational-Loss-Prediction-in-Healthcare/
+│
+├── cyberloss_project/        # Django project settings & URLs
+│   ├── settings.py
+│   └── urls.py
+│
+├── predictor/                # Core app: views, URLs, ML logic
+│   ├── views.py
+│   └── urls.py
+│
+├── templates/                # HTML templates
+│   ├── login.html
+│   ├── home.html
+│   └── output.html
+│
+├── static/                   # Static assets (SHAP plots, graphs)
+│   ├── shap/
+│   └── graphs/
+│
+├── scripts/                  # ML pipeline scripts
+│   ├── 01_create_dataset.py
+│   ├── 02_preprocess_data.py
+│   ├── 03_train_model.py
+│   ├── 04_model_comparison.py
+│   ├── 05_loss_driver_analysis.py
+│   ├── 06_shap_explainability.py
+│   └── 07_error_risk_analysis.py
+│
+├── data/                     # Raw and processed datasets
+│   ├── raw/
+│   └── processed/
+│
+├── outputs/                  # Generated graphs and reports
+│
+├── manage.py
+└── README.md
+```
+
 ---
 
 ## 📊 Dataset
@@ -53,6 +173,7 @@ This builds trust and helps administrators understand **why** a particular predi
 ---
 
 ## 🔑 Running Locally
+
 ```bash
 # 1. Clone the repository
 git clone https://github.com/Naveena-Sahukari/Cyberattack-Induced-Operational-Loss-Prediction-in-Healthcare.git
